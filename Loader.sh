@@ -1,0 +1,66 @@
+clear
+printf "\nLoading -----"
+for i in {0..2}; do
+printf "\b\b\b\b\b"
+for i in {0..4}; do
+printf " \b+"
+sleep 0.3
+done
+printf "\rLoading -----"
+done
+printf "\rLoading +++++"
+echo " Done"
+
+sleep 1.5
+echo
+
+printf "\033[1mLoading -----\033[0m"
+for i in {0..2}; do
+printf "\b\b\b\b\b"
+for i in {0..4}; do
+printf " \b+"
+sleep 0.3
+done
+printf "\r\033[1mLoading -----\033[0m"
+done
+printf "\r\033[2mLoading \033[0m\033[1m+++++ Done\033[0m\n"
+
+sleep 1.5 
+
+printf "\n\033[1;31mLoading \033[33m-----\033[0m"
+for i in {0..2}; do
+printf "\b\b\b\b\b"
+for i in {0..4}; do
+printf "\033[32m \b+"
+sleep 0.3
+done
+printf "\r\033[1;31mLoading \033[33m-----\033[0m"
+done
+printf "\r\033[2;31mLoading \033[0m\033[1;32m+++++ Done\033[0m\n"
+
+sleep 1.5
+r=0.25
+printf "\n\033[1;31mLoading \033[33m----------\033[33m"
+for i in {0..2}; do
+printf "\033[0;32m Done\033[0m\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+for i in {0..9}; do
+printf "\033[32m \b+"
+sleep $r
+#r=$(echo "(r^2)/2" | bc)
+done
+printf "\r\033[1;31mLoading \033[33m----------\033[0m"
+done
+printf "\r\033[2;31mLoading \033[0m\033[1;32m++++++++++ Done\033[0m\n"
+
+sleep 1.5
+
+printf "\n\033[1;31mLoading \033[33m           \033[0m"
+for i in {0..3}; do
+printf "\b\b\b\b\b\b\b\b\b\b"
+for i in {0..8}; do
+printf "\033[1;33m\b\b >>"
+sleep 0.1
+done
+printf "\r\033[1;31mLoading \033[33m           \033[0m"
+done
+printf "\r\033[2;31mLoading \033[0m\033[1;32m>>>>>>>>>> Done\033[0m\n\n"
