@@ -1,0 +1,5 @@
+echo VNC
+vncserver :1 -geometry 1250x700 -depth 24
+echo lightdmSTOP
+sudo service lightdm stop
+echo DONE
