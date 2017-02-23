@@ -1,0 +1,32 @@
+#!/bin/bash
+###Downloads and combines audio/video
+
+#Offering
+echo
+youtube-dl -F $1
+
+#Picking
+printf "\nVideoFormat(default 137): "
+read V
+printf "AudioFormat(default 141): "
+read A
+echo
+
+#Gathering
+if [ -z $V ]; then youtube-dl -f 137 "$1" -o "videoY"
+else youtube-dl -f "$V" "$1" -o "videoY"
+fi
+if [ -z $A ]; then youtube-dl -f 141 "$1" -o "audioY"
+else youtube-dl -f "$A" "$1" -o "audioY"
+fi
+
+#Naming
+N="$(youtube-dl --get-filename $1)"
+
+#Fusion time	o/
+ffmpeg -i videoY -i audioY \
+-c:v copy -c:a aac -strict experimental "$N"
+
+printf "\n\033[1m  Created: $N\033[0m\n\n"
+rm videoY audioY
+#Hammer time	o/

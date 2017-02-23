@@ -1,0 +1,1 @@
+sudo omxplayer $(youtube-dl -gf 22 $1) -o hdmi -b
