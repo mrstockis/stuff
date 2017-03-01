@@ -121,11 +121,5 @@ ${offset 240}${color slate grey}Kernel:  ${color darkgrey}$kernel
 
 #WineDev
 ${offset 240}${color dark red}Wine${color}DirectX11 ${color slate grey}(Dev.dx_43)
-${color dark grey}${execi 30 cat ~/SCRIPT/WineDevelop/WineDevStatus}
-# -||-
 ${offset 245}${color}${execi 3600 w3m -dump https://www.winehq.org/winapi_stats | grep d3dx11_43 | awk '{print $3}'}
 ${offset 245}${color}${execi 3600 date +%H:%M:%S}
-
-#Gw2Timer
-#${offset 240}${color slate grey}Twitch: ${color dark grey}${execi 15 cat /home/mikael/.gwBoss}
-#${offset 240}${execi 600 /home/mikael/./.gwTimerFetch.sh}

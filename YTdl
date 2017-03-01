@@ -8,7 +8,7 @@ youtube-dl -F $1
 #Picking
 printf "\nVideoFormat(default 137): "
 read V
-printf "AudioFormat(default 141): "
+printf "AudioFormat(default 140): "
 read A
 echo
 
@@ -16,7 +16,7 @@ echo
 if [ -z $V ]; then youtube-dl -f 137 "$1" -o "videoY"
 else youtube-dl -f "$V" "$1" -o "videoY"
 fi
-if [ -z $A ]; then youtube-dl -f 141 "$1" -o "audioY"
+if [ -z $A ]; then youtube-dl -f 140 "$1" -o "audioY"
 else youtube-dl -f "$A" "$1" -o "audioY"
 fi
 
