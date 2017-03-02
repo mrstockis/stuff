@@ -1,4 +1,4 @@
 #cat .gw2Timer | grep $(date +%H: -u) -A 4 
 watch -tn60 'printf "Event time	World boss	Hardcore world boss\n UTC  "
 date +%H:%M -u
-cat .gw2Timer | grep $(date +%H: -u) -A 5'
+grep $(date +%H: -u) -A 5 ./gw2TimerList'
