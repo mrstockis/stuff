@@ -1,16 +1,16 @@
 #!/bin/bash
+#Stream video; based on format
 
-player=mpv --quiet
-#player=omxplayer -o hdmi -b
+player="mpv --quiet"
+#player="sudo omxplayer -o hdmi -b"
 
 if [ $2 ]; then if [ $1 == "f" ]; then
 youtube-dl -F $2
 printf "Format: "
 read U
-sudo $player $(youtube-dl -gf $U $2)
-
+$player $(youtube-dl -gf $U $2)
 else
-sudo $player $(youtube-dl -gf $1 $2)
+$player $(youtube-dl -gf $1 $2)
 fi
 
 else

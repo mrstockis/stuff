@@ -1,0 +1,1 @@
+cowthink -f tux.cow "dx11: $(w3m https://www.winehq.org/winapi_stats | grep dx11_43 | awk '{print $3}')"
