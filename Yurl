@@ -13,6 +13,9 @@ else
 $player $(youtube-dl -gf $1 $2)
 fi
 
+elif [ $1 ]; then
+$player $(youtube-dl -gf best $1)
+
 else
-printf "\n Syntax: bash Yurl [format]|f [url]\n\n"
+printf "\n Syntax: bash Yurl ([format]|f) [url]\n\n"
 fi
