@@ -1,0 +1,33 @@
+#!/bin/bash
+#Pull latest tweets
+
+STX="[NAME]|[(l)ist|(f)low]  [(r)ead|(a)dd|(g)rab]"
+twi="https://mobile.twitter.com/"
+DIR="$(find -name Twit)"; clear
+
+while true; do
+len=$(bc <<< $(wc -l $DIR | awk '{print $1}')-28)
+printf "  Twitter: "
+read n f
+if [ $n ]; then echo; clear
+case $n in l) tail "$DIR" -n "$len" ;;
+	f) twat=($(tail "$DIR" -n "$len"))
+	for i in "${twat[@]}"; do
+	w3m -dump "$twi"$i | grep -im 1 @$i -C 2; done | less ;;
+	esac
+case $f in a) echo "$n" >> "$DIR" ;;
+	r) w3m -dump $twi$n | grep Reply -B 5 | less ;;
+	g) twif=$twi$(tail "$DIR" -n "$len" | grep -im 1 $n)
+	w3m -dump $twif | grep Reply -B 5 | less ;;
+	esac
+else
+	printf "\n $STX\n\n"
+fi
+done
+exit
+
+~~~List~~~
+realDonaldTrump
+madonna
+eminem
+neiltyson
