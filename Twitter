@@ -4,16 +4,18 @@
 STX="[NAME]|[(l)ist|(f)low]  [(r)ead|(a)dd|(g)rab]"
 twi="https://mobile.twitter.com/"
 DIR="$(find -name Twit)"; clear
+N=2	#number of tweets/tweeter in flow
 
 while true; do
-len=$(bc <<< $(wc -l $DIR | awk '{print $1}')-28)
+len=$(bc <<< $(wc -l $DIR | awk '{print $1}')-30)
 printf "  Twitter: "
 read n f
 if [ $n ]; then echo; clear
 case $n in l) tail "$DIR" -n "$len" ;;
 	f) twat=($(tail "$DIR" -n "$len"))
 	for i in "${twat[@]}"; do
-	w3m -dump "$twi"$i | grep -im 1 @$i -C 2; done | less ;;
+	printf "\n	#~-$i-~#\n"
+	w3m -dump "$twi"$i | grep -im $N @$i -C 2; done | less ;;
 	esac
 case $f in a) echo "$n" >> "$DIR" ;;
 	r) w3m -dump $twi$n | grep Reply -B 5 | less ;;
@@ -26,8 +28,9 @@ fi
 done
 exit
 
-~~~List~~~
+~List~
 realDonaldTrump
 madonna
 eminem
 neiltyson
+Peppe_Larsson
