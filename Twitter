@@ -12,14 +12,14 @@ printf "  Twitter: "
 read n f
 if [ $n ]; then echo; clear
 case $n in l) tail "$DIR" -n "$len" ;;
-	f) twat=($(tail "$DIR" -n "$len"))
+	f) twat=($(tail "$DIR" -n $(bc <<< $len-1)))
 	for i in "${twat[@]}"; do
-	printf "\n	#~-$i-~#\n"
-	w3m -dump "$twi"$i | grep -im $N @$i -C 2; done | less ;;
+	printf "\n\n-	-	$i	-	-\n"
+	w3m -dump "$twi"$i | grep -im $N Reply -B 4; done | less ;;
 	esac
 case $f in a) echo "$n" >> "$DIR" ;;
 	r) w3m -dump $twi$n | grep Reply -B 5 | less ;;
-	g) twif=$twi$(tail "$DIR" -n "$len" | grep -im 1 $n)
+	g) twif=$twi$(tail "$DIR" -n $len | grep -im 1 $n)
 	w3m -dump $twif | grep Reply -B 5 | less ;;
 	esac
 else
@@ -30,7 +30,11 @@ exit
 
 ~List~
 realDonaldTrump
-madonna
-eminem
 neiltyson
 Peppe_Larsson
+PSpringare
+katjanouch
+alicemedce
+hanifbali
+Ivarpi
+RubinReport
