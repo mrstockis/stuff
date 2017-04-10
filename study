@@ -1,0 +1,25 @@
+#!/bin/bash
+
+kha="https://www.youtube.com/playlist?list=PL1328115D3D8A2566"
+leo="https://www.youtube.com/playlist?list=PL5102DFDC6790F3D0"
+PS3="Select tutor: "
+tutor=( "Khan" "Leonard" )
+clear
+
+echo " Statistics"
+select t in ${tutor[@]}; do
+	case $t in
+		"Khan")
+		clear; echo " Khan Academy"
+		youtube-dl -e $kha
+		mpv $kha --really-quiet
+		;;
+		"Leonard")
+		clear; echo " Professor Leonard"
+		youtube-dl -e $leo
+		mpv $leo --really-quiet
+		;;
+		*) echo " Select '1' or '2'";
+	esac
+break
+done
