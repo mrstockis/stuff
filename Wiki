@@ -1,1 +1,1 @@
-w3m -dump https://en.wikipedia.org/wiki/$1 | less
+w3m -M https://en.wikipedia.org/wiki/$1

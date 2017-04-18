@@ -1,11 +1,11 @@
 #!/bin/bash
 #Pull latest tweets
 
-STX="[NAME]|[(l)ist|(f)low]  [(r)ead|(a)dd|(g)rab]"
+STX="[NAME]|[(l)ist|(f)low]  [(r)ead|(a)dd|(f)etch]"
 twi="https://mobile.twitter.com/"
-DIR="$(find -name Twit)"
-N=2	#number of tweets/tweeter in flow
-clear
+DIR="$(find -name Twit)"; clear
+N=1	#number of tweets/tweeter in flow
+
 while true; do
 len=$(bc <<< $(wc -l $DIR | awk '{print $1}')-30)
 printf "  Twitter: "
@@ -15,12 +15,12 @@ case $n in l) tail "$DIR" -n "$len" ;;
 	f) twat=($(tail "$DIR" -n $(bc <<< $len-1)))
 	for i in "${twat[@]}"; do
 	printf "\n\n-	-	$i	-	-\n"
-	w3m -dump "$twi"$i | grep -im $N Reply -B 4; done | less ;;
+	w3m -dump "$twi"$i | grep -im $N Reply -B 4 | egrep -v Reply; done | less ;;
 	esac
 case $f in a) echo "$n" >> "$DIR" ;;
 	r) w3m -dump $twi$n | grep Reply -B 5 | less ;;
 	f) twif=$twi$(tail "$DIR" -n $len | grep -im 1 $n)
-	w3m -dump $twif | grep Reply -B 5 | less ;;
+	w3m -dump $twif | grep Reply -B 5 | egrep -v Reply | less ;;
 	esac
 else
 	printf "\n $STX\n\n"
@@ -31,4 +31,3 @@ exit
 ~List~
 realDonaldTrump
 neiltyson
-RubinReport

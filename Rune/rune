@@ -1,0 +1,35 @@
+echo ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# fuþork:hnias:tmblr
+# vo årg:  eä :d p
+#  å ö     y
+#          ä
+#
+
+# read input (words) and fetch their fonetic signs
+# make case's; where ŋ,å,f,ð) correspond to runesign
+#case E in # fSounding) echo ᚠ
+# 	uoåSounding) echo ᚢ
+#	etc.
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+# ᚠᚢᚦᚬᚱᚴ:ᚼᚾᛁᛅᛊ:ᛏᛉᛒᛚᛣ
+#done
+
+# convert
+
+# read file, "first argument-placed text", and internet?
