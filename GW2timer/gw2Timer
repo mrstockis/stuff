@@ -1,15 +1,12 @@
-#cat .gw2Timer | grep $(date +%H: -u) -A 4 
-watch -tn60 'printf "Event time	World boss	Hardcore world boss\n UTC  "
-date +%H:%M -u
-#grep $(date +%H: -u) -A 5 ~/GW2timer/gw2TimerList
+watch -tn60 '
+printf " UTC  $(date +%H:%M -u)	World boss	Hardcore world boss\n"
+#date +%H:%M -u
 H="$(date +%H -u)"
 M="$(date +%M -u | cut -c 1)"
 T="$H:$M"
 if [ "$(grep $T ~/GW2timer/gw2TimerList)" ]; then
 grep "$T" ~/GW2timer/gw2TimerList -A 4
-else
-((M--))
-T="$H:$M"
+else ((M--)); T="$H:$M"
 grep "$T" ~/GW2timer/gw2TimerList -A 4
 fi
 '
