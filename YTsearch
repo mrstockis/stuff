@@ -1,14 +1,14 @@
+#Normal runnable script
 read -rep 'Search: ' S
 read -rep 'Hits: ' H
-
 A=()
 for i in $(youtube-dl -e ytsearch"$H":"$S" 2>/dev/null | cut -f1- -d" " --output-delimiter="_"); do A+=($i); done
         select t in "${A[@]}"; do
         echo $t | cut -f1- -d"_" --output-delimiter=" "
         mpv --really-quiet -fs $(youtube-dl -gf best ytsearch1:"$(echo $t | cut -f1- -d"-" --output-delimiter=" ")") 2>/dev/null
 done
-
 exit
+
 
 #Function for bashrc
 function Ysearch() { 

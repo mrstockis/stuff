@@ -1,3 +1,16 @@
+watch -tn60 '
+printf " UTC  $(date +%H:%M -u)	World boss	Hardcore world boss\n"
+H="$(date +%H -u)"
+M="$(date +%M -u | cut -c 1)"
+T="$H:$M"
+if [ "$(grep $T gw2Timer)" ]; then
+grep "$T" gw2Timer -A 4
+else ((M--)); T="$H:$M"
+grep "$T" gw2Timer -A 4
+fi
+'
+exit
+
 Event time        World boss        Hardcore world boss
 
 00:00      Admiral Taidha Covington Tequatl the Sunless

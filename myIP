@@ -1,0 +1,1 @@
+w3m -dump ipchicken.com | grep "Name Address" && w3m -dump ip-show.com | grep "State" -C 2
