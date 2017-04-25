@@ -2,4 +2,4 @@
 #t=temperature (day:night) normal=6500K,redDefault=5500(day),3500(night)
 #l=location (latitued:longitued)
 
-redshift -b 0.9:0.2 -t 5000:3000 -l 59.3345:18.0632 &
+redshift -b 0.9:0.4 -t 5000:3000 -l 59.3345:18.0632 &
