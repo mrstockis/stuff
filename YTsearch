@@ -19,20 +19,22 @@ function Ysearch() {
 	  done
 else echo ' Ysearch "Search Term" NumberOfHits'; fi }
 
-##Best so far##
-function L() {
-v=$(echo $(("$1"-1)))
-mpv -fs --really-quiet ${link["$v"]}
+##Second Function - extracts all##
+function Ysearch() {
+if [[ $2 ]]; then
+	function L() {
+		v=$(echo $(("$1"-1)))
+		mpv -fs --really-quiet ${link["$v"]}
 }
-
 echo "Searches.."
 for i in $(youtube-dl -gf best ytsearch"$2":"$1"); do
-link+=("$i ")
+	link+=("$i ")
 done
-
 echo "Generates Selection.."
 select t in $(youtube-dl -e ytsearch"$2":"$1" | cut -f1- -d" " --output-delimiter=""); do
 	if [ $REPLY -le $2 ]; then
 		L "$REPLY"
 	else echo "Pick 1 - $2"; fi
 done
+else echo ' Ysearch "Quoted searchterm" NumberOfHits '; fi
+}
