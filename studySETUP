@@ -1,0 +1,41 @@
+echo "This script creates a class from a playlist"
+
+read -rep "Name of Class/Subject: " N
+read -rep "Enter playlist: " P
+B="\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
+echo '#!/bin/bash
+
+function L() {
+v=$(echo $(("$1"-1)))
+mpv -fs --really-quiet ${link["$v"]}
+}
+' >> ~/"$N"
+
+printf "Generates Links.."
+echo 'LINKS=("' >> ~/$N
+youtube-dl -gf best $P >> ~/$N
+echo '")' >> ~/"$N"
+
+
+printf ""$B"Generates Selection.."
+echo 'TITELS=("' >> ~/"$N"
+youtube-dl -e $P | cut -f1- -d" " --output-delimiter="_" >> ~/"$N"
+echo '")' >> ~/"$N"
+
+echo "
+clear
+echo "$N"" >> ~/"$N"
+
+echo '
+for i in $LINKS; do
+	link+=("$i ")
+done
+for i in $TITELS; do
+	titel+=("$i ")
+done
+select t in "${titel[@]}"; do
+	L "$REPLY"
+done
+' >> ~/"$N"
+
+printf ""$B"\b\b\b\bDone! Access class by running file: ~/"$N"\n"
