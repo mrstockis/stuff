@@ -38,4 +38,8 @@ select t in "${titel[@]}"; do
 done
 ' >> ~/"$N"
 
+echo "
+#Reference: $P
+" >> ~/"$N"
+
 printf ""$B"\b\b\b\bDone! Access class by running file: ~/"$N"\n"

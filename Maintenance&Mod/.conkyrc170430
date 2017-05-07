@@ -1,0 +1,118 @@
+# UBUNTU-CONKY
+# A comprehensive conky script, configured for use on
+# Ubuntu / Debian Gnome, without the need for any external scripts.
+#
+# Based on conky-jc and the default .conkyrc.
+# INCLUDES:
+# - tail of /var/log/messages 
+# - netstat connections to your computer
+#
+# -- Pengo (conky@pengo.us)
+#
+
+# Create own window instead of using desktop (required in nautilus)
+#own_window yes
+#own_window_transparent yes
+#own_windown_type normal
+#own_window_hints undecorated,below,skip_taskbar,sticky,skip_pager
+
+#background no
+
+# Use double buffering (reduces flicker, may not work for everyone)
+double_buffer yes
+
+# fiddle with window
+use_spacer none
+use_xft yes
+
+# Update interval in seconds
+update_interval 1
+
+# Minimum size of text area
+minimum_size 400 5
+
+# Draw shades?
+draw_shades no
+
+# Text stuff
+draw_outline no # amplifies text if yes
+
+# Draw window outline
+draw_borders no
+
+uppercase no # set to yes if you want all text to be in uppercase
+
+# Stippled borders?
+stippled_borders 8
+
+# border margins
+#border_margin 4
+
+# border width
+border_width 1
+
+# Default colors and also border colors, grey90 == #e5e5e5
+default_color darkgrey
+default_shade_color black
+default_outline_color white
+
+#own_window_colour brown
+own_window_transparent yes
+
+# Conky alignment, other possible values are commented
+#alignment top_left
+alignment middle_right
+#alignment bottom_left
+#alignment bottom_right
+
+# Gap between borders of screen and text
+gap_x 15
+gap_y 0
+
+# stuff after 'TEXT' will be formatted on screen
+
+override_utf8_locale no
+xftfont Monospace:size=9
+xftalpha 0.8
+
+TEXT
+${offset 240}${color slate grey}Home:  ${color darkgrey}${fs_free /home}/${fs_size /home}
+${offset 240}${color}${fs_bar 3,120 /home}  ${color darkred} $fs_used_perc%
+
+${offset 240}${color slate grey}Temperature:        ${color darkred}${acpitemp}C
+
+${offset 240}${color slategrey}1|5|15: ${color lightgrey}$loadavg
+${offset 240}${color}${cpugraph 19,120 000000 ffffff}  ${color darkred} $cpu%
+${offset 240}${color #ddaa00} ${top name 1}${top_mem cpu 1}
+${offset 240}${color lightgrey}${top name 2} ${top cpu 2}
+${offset 240}${color grey}${top name 3} ${top cpu 3}
+${offset 240}${color darkgrey}${top name 4} ${top cpu 4}
+${offset 240}${color slate grey}${top name 5} ${top cpu 5}
+
+${offset 240}${color slategrey}Swap: ${swapbar 3,36 yellow} $swapperc%
+${offset 240}${color slategrey}Memory:   ${color}$mem/$memmax
+${offset 240}${membar 3,120}    ${color darkred}$memperc%
+${offset 240}${color #ddaa00} ${top_mem name 1}${top_mem mem 1}
+${offset 240}${color lightgrey}${top_mem name 2} ${top_mem mem 2}
+${offset 240}${color grey}${top_mem name 3} ${top_mem mem 3}
+${offset 240}${color darkgrey}${top_mem name 4} ${top_mem mem 4}
+${offset 240}${color slategrey}${top_mem name 5} ${top_mem mem 5}
+
+#ReworkNet
+${offset 240}${color slate grey}${if_up enp0s2Ou4}Tether ${else} --- ${endif}${if_up wlan0}Wireless ${else} --- ${endif}
+${offset 240}${color}Up                [k/s]
+${offset 240}${if_up enp0s20u4}${upspeedgraph enp0s20u4 18,120 00000f 009125 -l}  ${downspeedf enp0s20u4}${else}${upspeedgraph wlan0 18,120 00000f 009125 -l}  ${downspeedf wlan0}${endif}
+${offset 240}${color}Down
+${offset 240}${if_up enp0s20u4}${downspeedgraph enp0s20u4 18,120 00000f 910007 -l}  ${downspeedf enp0s20u4}${else}${downspeedgraph wlan0 18,120 00000f 910007 -l}  ${downspeedf wlan0}${endif}
+
+${offset 240}${color slate grey}UpTime:  ${color darkgrey}$uptime
+${offset 240}${color slate grey}Kernel:  ${color darkgrey}$kernel
+
+#myIP
+${offset 240}${color dark red}myAdress
+${offset 240}${color}${execi 30 w3m -dump ip-show.com | grep "State" | awk '{print $2}' | cut -f2- -d"."}
+${offset 240}${color}${execi 30 w3m -dump ipchicken.com | grep "Name Address" | awk '{print $4}' | cut -f2- -d"."}
+
+#WineDev
+${offset 240}${color dark red}Wine${color}DirectX11${color slate grey}_43
+${offset 245}${color}${execi 3600 w3m -dump https://www.winehq.org/winapi_stats | grep d3dx11_43 | awk '{print $3}'}
