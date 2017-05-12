@@ -1,13 +1,14 @@
-echo "This script creates a class from a playlist"
+echo "Creates selection-based playlist out of a URL-playlist"
 
-read -rep "Name of Class/Subject: " N
-read -rep "Enter playlist: " P
+read -rep "Name of Subject: " N
+read -rep "URL-playlist: " P
 B="\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
 echo '#!/bin/bash
 
 function L() {
-v=$(echo $(("$1"-1)))
+v=$(echo $(($1-1)))
 mpv -fs --really-quiet ${link["$v"]}
+#omxplayer -b ${link["$v"]}
 }
 ' >> ~/"$N"
 
@@ -27,9 +28,11 @@ clear
 echo "$N"" >> ~/"$N"
 
 echo '
+link=()
 for i in $LINKS; do
 	link+=("$i ")
 done
+titel=()
 for i in $TITELS; do
 	titel+=("$i ")
 done
@@ -42,4 +45,4 @@ echo "
 #Reference: $P
 " >> ~/"$N"
 
-printf ""$B"\b\b\b\bDone! Access class by running file: ~/"$N"\n"
+printf ""$B"\b\b\b\bDone! Access playlist by running file: ~/"$N"\n"
