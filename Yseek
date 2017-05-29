@@ -1,0 +1,19 @@
+YT=10
+S="$(echo "$1" | cut -f1- -d" " --output-delimiter="+")"
+
+w3m -dump -o display_link_number=1 https://www.youtube.com/results?search_query="$S" |
+grep "Play now" -A 2 |
+grep "\[" |
+sed 's/[ \t]*//' |
+head -n "$YT"
+
+while true; do
+read -rep 'Play or (a)dd by number: ' P A
+if [ ! "$P" ]; then echo exits; exit
+else
+mpv -fs --really-quiet $(
+w3m -dump -o display_link_number=1 https://www.youtube.com/results?search_query="$S" |
+grep "References:" -A 200 | 
+grep "\[$P\]" |
+awk '{print $2}')
+fi; done

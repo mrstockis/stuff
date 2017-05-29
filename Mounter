@@ -1,2 +1,0 @@
-#Mounts [specific driver](sda1) to an empty folder(USBpeek/)
-#sudo mount -t vfat /dev/sda1 /media/USBpeek/

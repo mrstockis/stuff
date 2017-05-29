@@ -1,0 +1,37 @@
+#!/bin/bash
+
+echo > ~/NetSpeedDump
+
+c=5
+printf "Tests left: "
+for i in {1..5}; do
+printf "$c"
+bbk_cli >> ~/NetSpeedDump
+echo >> ~/NetSpeedDump
+printf "\b"
+((c--))
+done
+
+printf "Done\n"
+
+echo
+printf "Latency \n$(cat ~/NetSpeedDump |
+grep Latency |
+awk '{print $2}')\n" |
+R -q -e "x<-read.csv('stdin'); summary(x); print('StaDev'); sd(x\$Latency)" |
+egrep -v "1st|3rd|read|>"
+echo
+printf "Download \n$(cat ~/NetSpeedDump |
+grep Download |
+awk '{print $2}')\n" |
+R -q -e "x<-read.csv('stdin'); summary(x); print('StaDev'); sd(x\$Download)" |
+egrep -v "1st|3rd|read|>"
+echo
+printf "Upload \n$(cat ~/NetSpeedDump |
+grep Upload |
+awk '{print $2}')\n" |
+R -q -e "x<-read.csv('stdin'); summary(x); print('StaDev'); sd(x\$Upload)" |
+egrep -v "1st|3rd|read|>"
+echo
+
+rm ~/NetSpeedDump

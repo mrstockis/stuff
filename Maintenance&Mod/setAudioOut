@@ -1,0 +1,8 @@
+Setting HDMI -alternatives
+
+$amixer cset numid=3 2 	#2=HDMI, 1=Analogue(headJack), 0=Automatic
+
+$raspi-config
+
+$sudo nano /boot/config.txt
+	hdmi_drive=2
