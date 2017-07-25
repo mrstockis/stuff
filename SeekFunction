@@ -1,0 +1,17 @@
+function Seek() {
+J=10
+A="$(echo $1 | cut -f1- -d" " --output-delimiter="+")"
+B="https://www.youtube.com/results?search_query=$A"
+player="mpv --really-quiet -fs"
+printf "\033[1m\n"; w3m -dump -o display_link_number -cols 300 $B | grep "Play now" -A 2 | grep ":" | head -n $J
+printf "\033[0m\n"; read -p ' Number (f|#|l): ' G F
+L=$(w3m -dump -o display_link_number -cols 300 $B | grep "References" -A 200 | grep "\[$G\]" | awk '{print $2}')
+if [ $G ]; then if [ $F ]; then if [ $F == "f" ]; then
+youtube-dl -F $L
+read -p "Format: " U
+$player "$(youtube-dl -gf $U $L)"
+elif [ $F == "l" ]; then echo $L
+else $player "$(youtube-dl -gf $F $L)"; fi
+else $player "$(youtube-dl -gf best $L)"; fi
+else printf "\n {Number of title} (+) {f(for formatList) or a specific known format number}\n"; fi
+}

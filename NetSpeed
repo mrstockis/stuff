@@ -2,14 +2,13 @@
 
 echo > ~/NetSpeedDump
 
-c=5
 printf "Tests left: "
-for i in {1..5}; do
-printf "$c"
+for i in {5..1}; do
+printf "$i"
 bbk_cli >> ~/NetSpeedDump
 echo >> ~/NetSpeedDump
 printf "\b"
-((c--))
+#((c--))
 done
 
 printf "Done\n"
