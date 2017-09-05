@@ -1,0 +1,16 @@
+#http://www.gp.se/ledare
+#!/bin/bash
+
+while true; do
+
+clear
+B="https://www.gp.se/ledare"
+
+printf "\033[1m\n"; w3m -dump -o display_link_number -cols 100 $B | grep ":" -B 2 | head -n 48 | tail -n 44
+printf "\033[0m\n"; read -p ' Number: ' G
+L=$(w3m -dump -o display_link_number -cols 300 $B | grep "References" -A 200 | grep "\[$G\]" | awk '{print $2}')
+if [ $G ]; then
+w3m -dump $L | grep -i nöjesblogg -A 200 | grep ":" -A 40 | grep "Mer innehåll" -B 100 | less
+fi
+
+done
