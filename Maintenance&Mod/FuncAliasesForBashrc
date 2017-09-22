@@ -1,3 +1,7 @@
+
+# $Find Look 'Exclude1|Exclude2|Excl..'
+alias Find='function _seek(){ if [ ! $2 ]; then echo Searched $1 && sudo find -iname *$1*; else echo Searched $1, excluded $2 && sudo find -iname *$1* | egrep -iv $2; fi };_seek'
+
 function Seek() {
 J=10
 A="$(echo $1 | cut -f1- -d" " --output-delimiter="+")"
@@ -15,3 +19,25 @@ else $player "$(youtube-dl -gf $F $L)"; fi
 else $player "$(youtube-dl -gf best $L)"; fi
 else printf "\n {Number of title} (+) {f(for formatList) or a specific known format number}\n"; fi
 }
+
+
+#Ysearch "$1" "$2"
+function Ysearch() {
+if [[ $2 ]]; then
+	function L() {
+		v=$(echo $(("$1"-1)))
+		mpv -fs --really-quiet ${link["$v"]}
+}
+echo "Searching.."; link=()
+for i in $(youtube-dl -gf best ytsearch"$2":"$1"); do
+	link+=("$i ")
+done
+echo "Generates Selection.."
+select t in $(youtube-dl -e ytsearch"$2":"$1" | cut -f1- -d" " --output-delimiter=""); do
+	if [ $REPLY -le $2 ]; then
+		L "$REPLY"
+	else echo "Pick 1 - $2"; fi
+done
+else echo ' Ysearch "Quoted searchterm" NumberOfHits '; fi
+}
+
