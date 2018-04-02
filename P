@@ -1,0 +1,5 @@
+while true; do
+read -rep " " CODE INPUT
+history -s "$CODE" "$INPUT"
+python3 ~/GITstuff/pyth/pyth.py -c $CODE <<< $INPUT
+done
