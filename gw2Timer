@@ -5,7 +5,7 @@ M="$(date +%M -u | cut -c 1)"
 T="$H:$M"
 if [ "$(grep $T gw2Timer)" ]; then
 grep "$T" gw2Timer -A 4
-else ((M--)); T="$H:$M"
+else M=$((M-1)); T="$H:$M"
 grep "$T" gw2Timer -A 4
 fi
 '
