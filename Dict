@@ -1,2 +1,0 @@
-w3m -dump "http://etymonline.com/index.php?term=$1&allowed_in_frame=0" | grep "(" -A 10 | grep advert -B 15 | grep -v advert
-

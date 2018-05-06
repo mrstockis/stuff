@@ -4,7 +4,7 @@ echo Update:
 sudo apt-get update
 echo
 echo Upgrade:
-sudo apt-get upgrade
+sudo apt-get upgrade -y
 echo
 echo Distro:
 sudo apt-get dist-upgrade

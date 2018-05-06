@@ -1,5 +1,0 @@
-echo Monkeyisland
-morse < monky -tsdaqw 18
-echo
-echo Random 5minute
-morse -trsdaqR 5
