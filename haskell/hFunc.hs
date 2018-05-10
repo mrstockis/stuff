@@ -1,5 +1,5 @@
 -- Tutorial
-testList = [3,4,6,4,8]
+testList = [3,4,8,4,6]
 dM x = x*2
 dU x y = (x*2,x*y)
 dSN x = if x > 100 then x else x*2
@@ -31,7 +31,13 @@ euler5 q = sum $ [ x| x <- [5,10..q], x`mod`3 /= 0 ] ++ [3,6..q]
 -- Experiments
 len' x = sum [ 1 | i <- x ]
 crop' x y z = [z !! i | i <- [x..y]]
-set' x = [ i | i <- [1..maximum x], i `elem` x ]
+
+set x = [ i | i <- [1..maximum x], i `elem` x ]
+
+set' (x:xs)
+ | xs == [] = [x]
+ | elem x xs = x:set' [ i | i <- xs, i /= x ]
+ | True = x:set' xs
 
 mod' :: Integral a => a -> a -> a
 mod' f s | f < s = f | True = mod' (f-s) s
@@ -44,17 +50,18 @@ max' (x:xs) | xs == [] = x
  | x < (head xs) = max' xs
  | True = max' (x:tail xs)
 
--- sieve' 
+-- sieve (not erastosthene's) 
+primes (x:xs)
+ | xs == [] = []
+ | True = x:primes [ i | i <- xs, 0 /= rem i x ]
 
--- cz::(Integral a)=> a -> [a]
+
+-- cz :: (Integral a) => a -> [a]
 cz x|x==1=[1]|odd x=x:cz(3*x+1)|True=x:cz(div x 2)
 
 cz1 :: (Integral a) => a -> [a]
 cz1 x | x == 1 = [1] | odd x = x:cz1 (3*x+1) | True = x:cz1 (div x 2)
 
 cz2 :: (Integral a) => a -> [a]
-cz2 x | x == 1 = [1]
- | otherwise = x:cz2 (if odd x then 3*x+1 else div x 2)
+cz2 x | x == 1 = [1] | True = x:cz2 (if odd x then 3*x+1 else div x 2)
 
-cz3 :: (Integral a) => a -> [a]
-cz3 x | x == 1 = [1] | True = x:cz2 (if odd x then 3*x+1 else div x 2)
