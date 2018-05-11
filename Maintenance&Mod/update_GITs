@@ -1,0 +1,9 @@
+
+#!/bin/bash
+
+
+for i in `ls -l | grep 4096 | awk '{print $9}'`; do 
+	echo "$i: "
+	cd $i; git pull; cd ..
+done
+
