@@ -40,4 +40,3 @@ select t in $(youtube-dl -e ytsearch"$2":"$1" | cut -f1- -d" " --output-delimite
 done
 else echo ' Ysearch "Quoted searchterm" NumberOfHits '; fi
 }
-
