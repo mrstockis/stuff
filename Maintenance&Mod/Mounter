@@ -1,2 +1,0 @@
-#Mounts, a type of format, of a specific driver (sda#) to an empty folder(USBpeek/)
-#sudo mount -t vfat /dev/#(sda|sdb) /media/#USBpeek/

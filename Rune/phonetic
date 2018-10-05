@@ -1,1 +1,0 @@
-w3m -dump https://www.merriam-webster.com/dictionary/"$1" | grep -m 1 play -A1 | grep \ | awk -F "\\" '{print $2}' | cut -f1 -d" "

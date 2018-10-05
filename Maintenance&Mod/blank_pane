@@ -1,7 +1,0 @@
-#b=brightness between 1.0 and 0.1 (day:night)
-#t=temperature (day:night) normal=6500K,redDefault=5500(day),3500(night)
-#l=location (latitued:longitued)
-
-conky &
-redshift -b 0.9:0.4 -t 5000:3000 -l 59.3345:18.0632 &
-bc -l

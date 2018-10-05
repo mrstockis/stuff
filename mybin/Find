@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# $Find Look 'Exclude1|Exclude2|Excl..'
+
+if [ ! $2 ]; then
+	echo Searched $1
+	sudo find -iname *$1*
+else 
+	echo Searched $1, excluded $2
+	sudo find -iname *$1* | egrep -iv $2
+fi
