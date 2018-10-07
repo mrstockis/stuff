@@ -1,3 +1,5 @@
+#!/bin/bash
+
 clear
 printf "\nLoading -----"
 for i in {0..2}; do

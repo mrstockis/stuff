@@ -1,0 +1,42 @@
+#!/bin/bash
+
+N=5  # Number of tasks; change to 6 for raspberry pi
+
+e="\033[0m"; d="\033[2m"; D="\033[1m"
+r="\033[2;31m"; g="\033[1;32m"; b="\033[34m"; y="\033[1;33m"
+space="  "; back="\b\b\b\b\b\b\b"
+
+start="$b - Full Upgrade -$e$d"
+end="\n$e$b -    Done    -$e\n"
+
+
+tasks=(  # each 7 characters
+	" Update" "Upgrade" "Distro "
+	"aRemove" "aClean " "Firmware"
+)
+actions=(
+	"sudo apt-get update -qq"
+	"sudo apt-get upgrade -yqq"
+	"sudo apt-get dist-upgrade -qq"
+	"sudo apt-get autoremove -qq"
+	"sudo apt-get autoclean -qq"
+	"sudo rpi-update"
+)
+
+
+printf "$start"
+if [ ! `sudo -v` ]; then echo; fi  # Update sudo timestamp
+
+# Initial
+for (( i=0; i<$N; i++ )); do
+	printf "$space$r${tasks[$i]}"
+done; printf "\r$e"
+
+# Progress
+for (( i=0; i<$N; i++ )); do
+	printf "$space$y${tasks[$i]}$e"
+	${actions[$i]}
+	printf "$back$g${tasks[$i]}"
+done
+
+printf "$end"

@@ -1,29 +1,31 @@
-
 #!/bin/bash
 
-J=10
-A="$(echo $1 | cut -f1- -d" " --output-delimiter="+")"
+HITS=10  # max 20
+A="` echo $1 | tr " " "+" `"
 B="https://www.youtube.com/results?search_query=$A"
 player="mpv --really-quiet -fs"
+#player="omxplayer -b"
 
-printf "\033[1m\n"; w3m -dump -o display_link_number -cols 300 $B | grep "Play now" -A 2 | grep ":" | head -n $J
+page=` w3m -dump -o display_link_number -cols 300 $B `
+
+printf "\033[1m\n"; echo $page | grep "Duration:" | head -n $HITS
 printf "\033[0m\n"; read -p ' Number (f|#|l): ' G F
 
-L=$(w3m -dump -o display_link_number -cols 300 $B | grep "References" -A 200 | grep "\[$G\]" | awk '{print $2}')
+L=` echo $page | grep References -A 200 | grep "\[$G\]" | awk '{print $2}' `
 
 if [ $G ]; then
 	if [ $F ];then
 		if [ $F == "f" ]; then
 			youtube-dl -F $L
 			read -p "Format: " U
-			$player "$(youtube-dl -gf $U $L)"
+			$player "` youtube-dl -gf $U $L `"
 		elif [ $F == "l" ]; then
 			echo $L
 		else
-			$player "$(youtube-dl -gf $F $L)"
+			$player "` youtube-dl -gf $F $L `"
 		fi
 	else
-		$player "$(youtube-dl -gf best $L)"
+		$player "` youtube-dl -gf best $L `"
 	fi
 else
 	printf "\n {Number of title} (+) {f(for formatList) or a specific known format number}\n"

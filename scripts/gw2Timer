@@ -1,3 +1,5 @@
+¤!/bin/bash
+
 watch -tn60 '
 printf " UTC  $(date +%H:%M -u)	World boss	Hardcore world boss\n"
 H="$(date +%H -u)"

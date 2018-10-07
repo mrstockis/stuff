@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #b=brightness between 1.0 and 0.1 (day:night)
 #t=temperature (day:night) normal=6500K,redDefault=5500(day),3500(night)
 #l=location (latitued:longitued)
