@@ -1,17 +1,16 @@
 #!/bin/bash
 
-N=5  # Number of tasks; change to 7 for raspberry pi
-
+# Styling
 e="\033[0m"; d="\033[2m"; D="\033[1m"
-r="\033[2;31m"; g="\033[1;32m"; b="\033[34m"; y="\033[1;33m"
-space="  "; back="\b\b\b\b\b\b\b"
+r="\033[1;31m"; g="\033[1;32m"; b="\033[1;34m"; y="\033[1;33m"
+space="  "; dash="---------"; fdash=""; back="\b\b\b\b\b\b\b"
 
-start="$b - Full Upgrade -$e$d"
-end="\n$e$b -    Done    -$e\n"
+
+# Main Switch
+active=( 1 1 1 1 1 0 0 )
 
 tasks=(  # each 7 characters
-	"Update " "Upgrade" "Distro "
-	"aRemove" "aClean " " yt-dl " "rpiFirm"
+	"Update " "Upgrade" "Distro " "aRemove" "aClean " " yt-dl " "rpiFirm"
 )
 actions=(
 	"sudo apt-get update -qq"
@@ -24,20 +23,28 @@ actions=(
 )
 
 
+start="$b - Full Upgrade -$e$d"
 printf "$start"
 if [ ! `sudo -v` ]; then echo; fi  # Update sudo timestamp
 
 # Initial
-for (( i=0; i<$N; i++ )); do
-	printf "$space$r${tasks[$i]}"
+for (( i=0; i<7; i++ )); do
+	if (( ${active[$i]} )); then
+		printf "$e$space$r${tasks[$i]}"
+		fdash=$fdash$dash
+	fi
 done; printf "\r$e"
 
 # Progress
-for (( i=0; i<$N; i++ )); do
-	printf "$space$y${tasks[$i]}$e"
-	eval "${actions[$i]}"
-	printf "$back$g${tasks[$i]}"
+for (( i=0; i<7; i++ )); do
+	if (( ${active[$i]} )); then
+		printf "$space$y${tasks[$i]}$e"
+		eval "${actions[$i]}"
+		printf "$back$g${tasks[$i]}"
+	fi
 done
 
+end="\n$e$b $fdash$e\n"
 printf "$end"
 
+#read -p " Press Enter to exit"
