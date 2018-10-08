@@ -23,8 +23,8 @@ actions=(
 )
 range=${#tasks[@]}
 
-printf "$d"
-sudo -kv  # Update sudo timestamp
+printf "$d"; sudo -k; sudo -v  # Update sudo timestamp
+
 start="$e$b - Full Upgrade - $e\n"
 printf "$start"
 
