@@ -21,14 +21,16 @@ actions=(
 	"sudo curl -s -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl; sudo chmod a+rx /usr/local/bin/youtube-dl >/dev/null"
 	"sudo rpi-update >/dev/null"
 )
+range=${#tasks[@]}
 
-
-start="$b - Full Upgrade -$e$d"
+printf "$d"
+sudo -kv  # Update sudo timestamp
+start="$e$b - Full Upgrade - $e\n"
 printf "$start"
-if [ ! `sudo -v` ]; then echo; fi  # Update sudo timestamp
+
 
 # Initial
-for (( i=0; i<7; i++ )); do
+for (( i=0; i<$range; i++ )); do
 	if (( ${active[$i]} )); then
 		printf "$e$space$r${tasks[$i]}"
 		fdash=$fdash$dash
@@ -36,7 +38,7 @@ for (( i=0; i<7; i++ )); do
 done; printf "\r$e"
 
 # Progress
-for (( i=0; i<7; i++ )); do
+for (( i=0; i<$range; i++ )); do
 	if (( ${active[$i]} )); then
 		printf "$space$y${tasks[$i]}$e"
 		eval "${actions[$i]}"
