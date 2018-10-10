@@ -1,13 +1,16 @@
 #!/bin/bash
 
+sudo -k # Reset sudo timestamp
+
 # Styling
 e="\033[0m"; d="\033[2m"; D="\033[1m"
 r="\033[1;31m"; g="\033[1;32m"; b="\033[1;34m"; y="\033[1;33m"
 space="  "; dash="---------"; fdash=""; back="\b\b\b\b\b\b\b"
 
+printf "$b - Full Update - $e$d"
 
 # Main Switch
-active=( 1 1 1 1 1 0 0 )
+active=( 1 1 1 1 1 1 1 )
 
 tasks=(  # each 7 characters
 	"Update " "Upgrade" "Distro " "aRemove" "aClean " " yt-dl " "rpiFirm"
@@ -18,16 +21,12 @@ actions=(
 	"sudo apt-get dist-upgrade -qq"
 	"sudo apt-get autoremove -qq"
 	"sudo apt-get autoclean -qq"
-	"sudo curl -s -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl; sudo chmod a+rx /usr/local/bin/youtube-dl >/dev/null"
+	"sudo curl -s -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl; sudo chmod a+rx /usr/local/bin/youtube-dl"
 	"sudo rpi-update >/dev/null"
 )
 range=${#tasks[@]}
 
-printf "$d"; sudo -k; sudo -v  # Update sudo timestamp
-
-start="$e$b - Full Upgrade - $e\n"
-printf "$start"
-
+sudo -v  # Update sudo timestamp
 
 # Initial
 for (( i=0; i<$range; i++ )); do

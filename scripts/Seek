@@ -8,10 +8,10 @@ player="mpv --really-quiet -fs"
 
 page=` w3m -dump -o display_link_number -cols 300 $B `
 
-printf "\033[1m\n"; echo $page | grep "Duration:" | head -n $HITS
+printf "\033[1m\n"; echo "$page" | grep "Duration:" | head -n $HITS
 printf "\033[0m\n"; read -p ' Number (f|#|l): ' G F
 
-L=` echo $page | grep References -A 200 | grep "\[$G\]" | awk '{print $2}' `
+L=` echo "$page" | grep References -A 200 | grep "\[$G\]" | awk '{print $2}' `
 
 if [ $G ]; then
 	if [ $F ];then
