@@ -10,7 +10,7 @@ space="  "; dash="---------"; fdash=""; back="\b\b\b\b\b\b\b"
 printf "$b - Full Update - $e$d"
 
 # Main Switch
-active=( 1 1 1 1 1 1 1 )
+active=( 1 1 1 1 1 0 0 )
 
 tasks=(  # each 7 characters
 	"Update " "Upgrade" "Distro " "aRemove" "aClean " " yt-dl " "rpiFirm"
