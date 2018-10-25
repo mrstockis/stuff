@@ -1,0 +1,42 @@
+#!/bin/bash
+
+sn="🅻🅸🅽🆄🆇'"
+T="-t $sn"
+
+define -A config
+config=(
+	"new-session -s $sn -d"
+	
+	"rename-window $T ♫♩"
+	"send-keys $T WebSound Enter"
+	"split-pane $T"
+	"send-keys $T ranger Enter"
+	"select-pane $T:0.0"
+	"split-pane -h $T"
+	"clock-mode $T"
+	"select-pane $T:0.0"
+	
+	"new-window $T:3 -n web"
+	"send-keys $T www Enter"
+	
+	"new-window $T:1 -n >_"
+	
+	"new-window $T:9 -n λ"
+	"split-pane -h $T"
+	"split-pane $T"
+	"select-pane $T:9.0"
+
+	"select-window $T:0.0"
+)
+
+
+function setup() {
+	n=${#config[@]}
+	for (( i=0; i<$n; i++ )); do
+		tmux ${config[$i]}
+	done
+}
+
+
+# Configurate and Attach
+setup && tmux a $T

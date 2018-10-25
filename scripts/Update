@@ -9,20 +9,27 @@ space="  "; dash="---------"; fdash=""; back="\b\b\b\b\b\b\b"
 
 printf "$b - Full Update - $e$d"
 
-# Main Switch
-active=( 1 1 1 1 1 0 0 )
+# Main Switch	(a)rch (u)buntu (r)aspberryPi (o)therStuff
+active=( 0 0 0 0 0 0 0 0 0 0 )
+#        a a a u u u u u r o
 
 tasks=(  # each 7 characters
-	"Update " "Upgrade" "Distro " "aRemove" "aClean " " yt-dl " "rpiFirm"
+	"pacman " "yaourt " "Clean  " "Update " "Upgrade" "Distro " "aRemove" "aClean " "rpiFirm" " yt-dl "
 )
 actions=(
+	"sudo pacman -Syyu --noconfirm >/dev/null"
+	"yaourt -Syyu --noconfirm >/dev/null"
+	"if [ `pacman -Qdtq` ]; then sudo pacman -Rns `pacman -Qdtq` --noconfirm >/dev/null; fi"
+
 	"sudo apt-get update -qq"
 	"sudo apt-get upgrade -yqq > /dev/null"
 	"sudo apt-get dist-upgrade -qq > /dev/null"
 	"sudo apt-get autoremove -qq"
 	"sudo apt-get autoclean -qq"
-	"sudo curl -s -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl; sudo chmod a+rx /usr/local/bin/youtube-dl"
+	
 	"sudo rpi-update >/dev/null"
+	
+	"sudo curl -s -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl; sudo chmod a+rx /usr/local/bin/youtube-dl"
 )
 range=${#tasks[@]}
 
