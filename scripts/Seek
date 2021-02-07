@@ -3,8 +3,8 @@
 HITS=10  # max 20
 A="` echo $1 | tr " " "+" `"
 B="https://www.youtube.com/results?search_query=$A"
-player="mpv --really-quiet -fs"
-#player="omxplayer -b"
+#player="mpv --really-quiet -fs"
+player="omxplayer -b -o hdmi"
 
 page=` w3m -dump -o display_link_number -cols 300 $B `
 

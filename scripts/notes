@@ -1,0 +1,46 @@
+#!/bin/bash
+
+if [ -z `ls "$file"` ]; then
+    touch "$file"
+fi
+
+
+file="/home/pi/.notes.txt"
+bullet=" •"
+
+
+while true; do clear
+    printf "\033[2;33m - - N o t e s - -\033[0m\n\n"
+    egrep "^\|.+" "$file" | grep -v 'AddEntry' | sed "s/\|/$bullet/" | sed 's/|//'
+    echo
+    read -rep " Go to " A B
+    history -s $A
+
+    if [ -z $A ]; then
+        break
+    elif [ -z $B ]; then
+        from=`egrep -i "^\|.*"$A "$file"`
+        till=`grep "$from" -A100 "$file" | grep -v "$from" | egrep "^\|.*" -m1`
+        txt=`grep "$from" "$file" -A100 | grep "$till" -B100 | grep -v "$till"`
+        printf "$txt\n" | less
+
+    else case "$B" in
+        a)
+            endRow=`wc -l "$file" | cut -d ' ' -f1`
+            echo >> "$file"
+            cat "$A" >> "$file"
+            printf '\n\n\n| AddEntry\n' >> "$file"
+            vim +"$endRow" "$file"  ;;
+        e) 
+            row=`egrep -in "^\|.*"$A $file | cut -d ':' -f1`
+            vim +"$row" "$file"  ;;
+        *)
+            printf " a - append a file\n e - edit entry\n"
+            read  ;;
+       esac
+    fi
+    
+
+done
+
+clear
