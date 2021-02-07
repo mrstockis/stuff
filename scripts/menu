@@ -37,7 +37,7 @@ do
     
     [ -z $N ] && break || eval "$action ${menu[$N]}"
 
-    #read
+    read
 done
 
 clear
