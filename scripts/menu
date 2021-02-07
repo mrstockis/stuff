@@ -1,0 +1,43 @@
+
+#!/bin/bash
+
+[ -z "$1" ] || [ "$1" == "-h" ] || [ -z "$2" ] &&
+
+printf '
+Syntax:
+ menu [command and perimiters] [list of files]
+  where [list of files] could be
+    file1 file2 ..
+  or generated like
+    `ls dir | grep foo | ..`\n
+' && exit
+
+action="$1"
+declare -A menu
+
+index=0
+for file in "$@";
+do
+    menu[$index]="$file"
+    ((index++))
+done
+
+while true;
+do
+    clear
+
+    printf "\n\033[1;34m Menu\033[1;30m - $action\033[0m\n\n"
+
+    for ((i=1 ; i<index ; i++));
+    do
+        echo " $i: ${menu[$i]}"
+    done
+    
+    printf "\n\033[1;30m > \033[0m"; read N
+    
+    [ -z $N ] && break || eval "$action ${menu[$N]}"
+
+    read
+done
+
+clear
