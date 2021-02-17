@@ -53,7 +53,7 @@ do
     elif [ "$N" == "p" ]; then
         let "show_path=0**show_path"
     elif [ "$N" != "p" ]; then
-        eval "$action ${menu[$N]}"
+        eval '$action "${menu[$N]}"'
         read
     fi
 
