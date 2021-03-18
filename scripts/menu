@@ -1,8 +1,10 @@
 
 #!/bin/bash
 
-[ -z "$1" ] || [ "$1" == "-h" ] || [ -z "$2" ] && printf '
-Syntax:
+#[ -z "$1" ] || [ "$1" == "-h" ] || [ -z "$2" ] && printf '
+[ -z "$1" ] || [ "$1" == "-h" ] && printf '
+S y n t a x
+
  menu [command and perimiters] [list of files]
   where [list of files] could be
     file1 file2 ..
@@ -14,7 +16,17 @@ Syntax:
   Enter "p" to toggle pathway
   \n' && exit
 
-action="$1"
+
+#action="$1"
+
+#
+#if [ -z "$2" ]; then
+#    actions=0
+#else
+#    actions="$1"
+#fi
+#
+
 declare -A menu
 show_path=0
 
@@ -30,33 +42,42 @@ while true;
 do
     
     display="\n\033[1;34m Menu\033[1;30m | $action\033[0m\n\n"
-    #printf "\n\033[1;34m Menu\033[1;30m | $action\033[0m\n\n"
-
-    for ((i=1 ; i<index ; i++));
+    
+    for ((i=0 ; i<index ; i++));
     do
         file=`
             ([ $show_path == 1 ] && echo "${menu[$i]}") ||
             echo "${menu[$i]}" | sed 's/\//\n/g' | tail -n 1
             `
          display+=" $i: $file\n"
-    #    echo " $i: $file"
     done
     
     display+="\n\033[1;30m > \033[0m"
     
-    clear; printf "$display"; read N
-    
-    #printf "\n\033[1;30m > \033[0m"; read N
+    clear; printf "$display"; read -re N A
+
+    if [ "$A" ]; then
+        history -s "$A"
+    fi
     
     if [ -z "$N" ]; then
         break
     elif [ "$N" == "p" ]; then
         let "show_path=0**show_path"
-    elif [ "$N" != "p" ]; then
-        eval '$action "${menu[$N]}"'
+        clear
+    else
+        if [ "$A" ]; then
+            action=$A
+        fi
+        re='^[0-9]+$'
+        if ! [[ $N =~ $re ]]; then
+            action="$N $A" 
+            continue
+        fi
+        doAction=` echo "$action" | sed "s/VAR/${menu[$N]}/g" `
+        eval $doAction
         printf "\nX\r"
         read
-        clear
     fi
 
 done
