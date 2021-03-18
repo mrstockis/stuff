@@ -54,7 +54,9 @@ do
         let "show_path=0**show_path"
     elif [ "$N" != "p" ]; then
         eval '$action "${menu[$N]}"'
+        printf "\nX\r"
         read
+        clear
     fi
 
 done
