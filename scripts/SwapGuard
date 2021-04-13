@@ -1,0 +1,144 @@
+
+#!/bin/bash
+
+
+totalMem=0
+usedMem=0
+freeMem=0
+usageFreq=0
+
+help="
+Info:
+    Free up swap space whenever possible
+Usage:
+    SwapGuard [on|off|state]\n
+"
+
+
+function tryToFree()
+{
+    totalMem=`free | sed -n 2p | awk '{print $2}'`
+    usedMem=`free | sed -n 2p | awk '{print $3}'`
+    #freeMem=`free | sed -n 2p | awk '{print $3}'`
+    usageFreq=$(( ( (usedMem)*100 )/totalMem ))
+    
+    if [[ $usageFreq -lt 50 ]]; then
+        sudo swapoff /var/swap
+        sleep 1
+        sudo swapon /var/swap
+        sleep 10
+    else
+        sleep 1
+        
+        if [[ -f ~/.swapGuardActive ]]; then tryToFree; fi
+    fi
+}
+
+
+function main()
+{
+    echo "SwapGuard Activated"
+    
+    id=$(( $$ + 1 ))
+    echo "$id" > ~/.swapGuardActive
+    
+    while [[ -f ~/.swapGuardActive ]]; do
+        swapUsage=`free | sed -n 3p | awk '{print $3}'`
+        if [[ $swapUsage -gt 0 ]]; then
+            tryToFree
+        fi
+        sleep 1
+    done
+
+    echo "SwapGuard Terminated"
+}
+
+
+
+
+## Dealing with initial call
+
+case $1 in
+
+    on) 
+
+        if [[ -f ~/.swapGuardActive ]]; then
+            if [[ `ps -p $(cat ~/.swapGuardActive) | sed -n 2p` ]]; then
+                echo "Already Running"
+                exit
+            else
+                rm ~/.swapGuardActive
+            fi
+        fi
+
+        main &
+    ;;
+
+    off)
+       ([[ -f ~/.swapGuardActive ]] &&
+        rm ~/.swapGuardActive) ||
+        echo "SwapGuard was already off"
+    ;;
+
+    state)
+        if [[ -f ~/.swapGuardActive ]]; then
+            if [[ `ps -p $(cat ~/.swapGuardActive) | sed -n 2p` ]]; then
+                echo "SwapGuard is currently on"
+            else
+                echo "SwapGuard is currently off"
+                rm ~/.swapGuardActive
+            fi
+        else
+            echo "SwapGuard is currently off"
+        fi
+    ;;
+    
+    *)
+        printf "$help"
+    ;;
+
+esac
+
+
+exit  #######
+
+if [[ "$1" == "on" ]]; then
+    if [[ -f ~/.swapGuardActive ]]; then
+        if [[ `ps -p $(cat ~/.swapGuardActive) | sed -n 2p` ]]; then
+            echo "Already Running"
+            exit
+        else
+            rm ~/.swapGuardActive
+        fi
+    fi
+
+    main &
+
+elif [[ "$1" == "off" ]]; then
+    if [[ -f ~/.swapGuardActive ]]; then
+        rm ~/.swapGuardActive
+    else
+        echo "SwapGuard was already off"
+    fi
+
+elif [[ "$1" == "state" ]]; then
+    if [[ -f ~/.swapGuardActive ]]; then
+        if [[ `ps -p $(cat ~/.swapGuardActive) | sed -n 2p` ]]; then
+            echo "SwapGuard is currently on"
+        else
+            echo "SwapGuard is currently off"
+            rm ~/.swapGuardActive
+        fi
+    else
+        echo "SwapGuard is currently off"
+    fi
+else
+    printf "$syntax"
+fi
+
+
+
+
+
+
+
