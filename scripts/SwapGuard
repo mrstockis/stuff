@@ -2,10 +2,15 @@
 #!/bin/bash
 
 
-totalMem=0
-usedMem=0
-freeMem=0
-usageFreq=0
+memUsage=0
+memTotal=0
+memFree=0
+memFreq=0
+
+notPrompted=1
+top_task_name=""
+top_task_pid=""
+
 
 help="
 Info:
@@ -17,20 +22,48 @@ Usage:
 
 function tryToFree()
 {
-    totalMem=`free | sed -n 2p | awk '{print $2}'`
-    usedMem=`free | sed -n 2p | awk '{print $3}'`
-    #freeMem=`free | sed -n 2p | awk '{print $3}'`
-    usageFreq=$(( ( (usedMem)*100 )/totalMem ))
+     memUsed=`free | sed -n 2p | awk '{print $3}'`
+    memTotal=`free | sed -n 2p | awk '{print $2}'`
+    #memFree=`free | sed -n 2p | awk '{print $3}'`
+    memFreq=$(( ( (memUsed)*100 )/memTotal ))
+   
+
+     swpUsed=`free | grep Swap | awk '{print $3}' `
+    swpTotal=`free | grep Swap | awk '{print $2}' `
+    swpFreq=$(( ( (swpUsed)*100 )/swpTotal ))
     
-    if [[ $usageFreq -lt 50 ]]; then
+    if [[ $memFreq -lt 50 ]]; then
         sudo swapoff /var/swap
         sleep 1
         sudo swapon /var/swap
         sleep 10
+    
+    elif [[ $swpFreq -gt 90 && $notPrompted -eq 1 ]]; then
+        notPrompted=0
+        
+        top_task=` top -b -o "%MEM" -n 1 | grep "%MEM" -A 1 | tail -n 1 `
+        top_task_name=` echo "$top_task" | awk '{print $12}' `
+        top_task_pid=` echo "$top_task" | awk '{print $1}' `
+
+        msg="WARNING: Memory full, kill $top_task_name to prevent freeze?"
+        response=` xmessage -center "$msg" -button Yes,Nah -print  2>/dev/null `
+
+        case $response in
+            "Yes") echo "Killing $top_task_name with pid $top_task_pid"
+                notPrompted=1
+                sudo kill $top_task_pid ;;
+            "Nah") echo "No action";;
+            *) echo "Exiting";;
+        esac
+    
+    elif [[ $notPrompted -eq 0 && $swpFreq -lt 90 ]]; then
+        notPrompted=1
+
     else
         sleep 1
         
-        if [[ -f ~/.swapGuardActive ]]; then tryToFree; fi
+        if [[ -f ~/.swapGuardActive ]]; then
+            tryToFree; fi
     fi
 }
 
