@@ -1,23 +1,30 @@
 #!/bin/bash
 
-sudo -k # Reset sudo timestamp
-
-# Styling
-e="\033[0m"; d="\033[2m"; D="\033[1m"
+E="\033[0m"; D="\033[2m"; B="\033[1m"
 r="\033[1;31m"; g="\033[1;32m"; b="\033[1;34m"; y="\033[1;33m"
-space="  "; dash="---------"; fdash=""; back="\b\b\b\b\b\b\b"
+space="  "; dash=" " fdash=""
 
-printf "$b - Full Update - $e$d"
+# sudo -k # Reset sudo timestamp
 
+printf "$b - Full Update - $E$D"
+
+# Prompt for cridentials
+#sudo -k  # Reset sudo timestamp
+#sudo -v  # Update sudo timestamp
+echo
 # Main Switch	(a)rch (u)buntu (r)aspberryPi (o)therStuff
-active=( 1 1 1 1 1 1 )
+active=( 1 1 0 1 1 1 )
 #        u u u u u o
 
-tasks=(  # each 7 characters
-	"Update " "Upgrade" "Distro " "aRemove" "aClean " " yt-dl "
+tasks=(
+	"Update"
+  "Upgrade"
+  "DistroUpgrade"
+  "autoRemove"
+  "autoClean"
+  "youtube-dl"
 )
 actions=(
-
 	"sudo apt-get update -qq"
 	"sudo apt-get upgrade -yqq > /dev/null"
 	"sudo apt-get dist-upgrade -qq > /dev/null"
@@ -27,26 +34,28 @@ actions=(
 )
 range=${#tasks[@]}
 
-sudo -v  # Update sudo timestamp
+# Initiate
+printf "$E"
+for (( i=0; i<$range; i++)); do
+	if [[ ${active[$i]} ]]; then
+    printf "$space$r${tasks[$i]}"
+  fi
+done; printf "\r"
 
-# Initial
-for (( i=0; i<$range; i++ )); do
-	if (( ${active[$i]} )); then
-		printf "$e$space$r${tasks[$i]}"
-		fdash=$fdash$dash
-	fi
-done; printf "\r$e"
-
+end=""
 # Progress
 for (( i=0; i<$range; i++ )); do
-	if (( ${active[$i]} )); then
-		printf "$space$y${tasks[$i]}$e"
-		eval "${actions[$i]}"
-		printf "$back$g${tasks[$i]}"
-	fi
-done
+  if [[ ${active[$i]} ]]; then
+    printf "$space$y${tasks[$i]}"
+    #eval "${actions[a]}"
+    sleep 1
+    task_string="$space${tasks[$i]}"
+    string_length=${#task_string}
+    for ((l=0; l<$string_length; l++)); do
+      printf "\b"
+      dash="$dash-"
+    done
+    printf "$space$g${tasks[$i]}"
+  fi
+done; printf "\n$E$D$dash \n$E"
 
-end="\n$e$b $fdash$e\n"
-printf "$end"
-
-#read -p " Press Enter to exit"
