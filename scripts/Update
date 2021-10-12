@@ -9,9 +9,9 @@ space="  "; dash=" " fdash=""
 printf "$b - Full Update - $E$D"
 
 # Prompt for cridentials
-#sudo -k  # Reset sudo timestamp
-#sudo -v  # Update sudo timestamp
-echo
+sudo -k  # Reset sudo timestamp
+sudo -v  # Update sudo timestamp
+
 # Main Switch	(a)rch (u)buntu (r)aspberryPi (o)therStuff
 active=( 1 1 0 1 1 1 )
 #        u u u u u o
@@ -37,18 +37,16 @@ range=${#tasks[@]}
 # Initiate
 printf "$E"
 for (( i=0; i<$range; i++)); do
-	if [[ ${active[$i]} ]]; then
+  if (( ${active[$i]} )); then
     printf "$space$r${tasks[$i]}"
   fi
 done; printf "\r"
 
-end=""
 # Progress
 for (( i=0; i<$range; i++ )); do
-  if [[ ${active[$i]} ]]; then
+  if (( ${active[$i]} )); then
     printf "$space$y${tasks[$i]}"
-    #eval "${actions[a]}"
-    sleep 1
+    eval "${actions[a]}"
     task_string="$space${tasks[$i]}"
     string_length=${#task_string}
     for ((l=0; l<$string_length; l++)); do
