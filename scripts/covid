@@ -1,0 +1,74 @@
+#!/bin/bash
+
+O="\033[33m"
+B="\033[34m"
+T="\033[36m"
+D="\033[2m"
+E="\033[0m"
+
+
+width=12
+
+echo
+
+world_ref="https://www.worldometers.info/coronavirus/"
+world_data=`w3m -dump $world_ref`
+
+
+printf "$T   World\n$B%*s %*s %*s %*s$E\n" $width "Active" $width "Mild" $width "Serious" $width "Deaths"
+
+active=`printf "%s" "$world_data" | grep 'Active Cases' -A1 | tail -n1 | sed 's/,//g'`
+active_dec=${active:4:1}
+active="$((active/1000000)).$active_dec M"
+
+mild=`printf "%s" "$world_data" | grep 'Mild Condition' -B1 | head -n1 | awk '{print $2}' | sed 's/[()]//g'`
+
+serious=`printf "%s" "$world_data" | grep 'Serious' -B1 | head -n1 | awk '{print $2}' | sed 's/[()]//g'`
+
+deadly=`printf "%s" "$world_data" | grep 'Deaths' -B1 | grep '%' | awk '{print $2}' | sed 's/[()]//g'`
+
+printf "$D%*s %*s %*s %*s$E\n" $width "$active" $width "$mild" $width "$serious" $width "$deadly"
+
+
+
+function covid_country() {
+  country_ref="https://www.worldometers.info/coronavirus/#countries"
+  CD=`w3m -dump $country_ref | grep "Country," -A200 `  #country data
+  
+  #for cnty in "$@"; do
+  #  printf "%*s" 7 $cnty
+  #done; echo
+  
+  printf "$B%*s%*s$E\n" $width "Country" $width "Deaths%"
+
+  for cnty in "$@"; do
+
+    #cnty=$1
+    space=`echo "$cnty" | grep "\s" -c`
+    if (( $space )); then
+      total_cases=`printf "%s" "$CD" | grep "$cnty" | head -n1 | awk '{print $4}' | sed 's/,//g'`
+      total_death=`printf "%s" "$CD" | grep "$cnty" | head -n1 | awk '{print $5}' | sed 's/,//g'`
+    else
+      total_cases=`printf "%s" "$CD" | grep "$cnty" | head -n1 | awk '{print $3}' | sed 's/,//g'`
+      total_death=`printf "%s" "$CD" | grep "$cnty" | head -n1 | awk '{print $4}' | sed 's/,//g'`
+    fi
+
+    #echo $total_cases
+    #echo $total_death
+    #sleep 1
+
+    (( $total_cases )) && deadly=$((1000*total_death/total_cases)) || deadly="N/A"
+    #echo $deadly
+    #deadly=342
+    #sleep 1
+    #deadly_dec=${deadly:4:1}
+    (( $total_cases )) && deadly="${deadly:0:$((${#deadly}-1))}.${deadly:$((${#deadly}-1)):1}  " || deadly="---  "
+
+    printf "$T%*s$E$O%*s$E" $width "$cnty" $width "$deadly"
+    echo
+
+  done
+}
+echo
+covid_country "$@"
+echo
