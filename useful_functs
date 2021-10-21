@@ -1,1 +1,26 @@
+#!/bin/bash
+
 function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
+
+function decimal() {
+  n=` echo "$1" | sed 's/[, ]//g' `
+  p=${2:-2}
+  (( ${#n} < 2 )) && d=0 || d=${n:1:$p}
+  n=${n:0:1}.$d
+  echo $n 
+}
+
+function sci_num() {
+  n=` echo "$1" | sed 's/[, ]//g' `
+  p=${2:-2} #` [[ -z $2  ]] && echo 2 || echo $2 `
+  s=${#n}
+  m=$(( $s-1 ))
+  d=` (( $m-2 < 1 )) && echo 0 || echo $(( $m-$p ))`
+  n=$(( $n / 10**$d ))
+  
+  n=`decimal $n $p`
+
+  echo $n'e'$m
+
+}
+
