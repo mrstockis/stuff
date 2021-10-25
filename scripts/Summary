@@ -24,15 +24,21 @@ m=0
 #clear; printf "\n$D$P $head -$E$D press [Enter] to exit$E " ; sleep 2
 
 function run() {
-while true; do
+c=0
+#country=''
 
+while true; do
+  
   date=`date +'%a %H:%M %d-%b-%y'`
   #date=$date" $(( (`date +%j`*100 ) / 365 ))%"
   show="\n$D$P $head$E $D-$E $D$T$date$E $D-$E" 
 
-  online=`ping google.com -c1 -W1 2>&1 | grep '%' | cut -d',' -f2 | cut -d" " -f2`
+  online=`ping google.com -c1 -W2 2>&1 | grep '%' | cut -d',' -f2 | cut -d" " -f2`
   online=${online:-0}
   if (( $online == 1 )); then state=$L$T△; else state=$L$O▽; fi
+  
+  (( $online )) && (( $c % 5 )) &&
+  country=" - `w3m -dump https://whatismyipaddress.com/ | grep City: | awk -F': ' '{print $2}'`"
   
   (( $N < $S )) && N=$(( $N+1 ))
   m=$(( $m + ((10*$S+9*($m/90))*$online-$m) / ($N) ))
@@ -44,7 +50,7 @@ while true; do
   done
   perc=`printf "%*d%%" 3 $m`
   
-  show=$show" $part$state$E\n"
+  show=$show" $part$state$E$D$country$E\n"
   
   disk_space0=`df -h | head -n1 | awk '{print $1,$2,$3,$4,$5}' | sed 's/ /.../g'`
   disk_space1=`df -h | head -n2 | tail -n1 | awk '{print $1,$2,$3,$4,$5}' | sed 's/ /..../g'`
@@ -65,6 +71,8 @@ while true; do
   #fin=1
   #sleep 3 & (read -t 5 && wait) || fin=0
   #(( $fin )) && break
+  
+  (( $c == 100 )) && c=0 || c=$(($c+1))
 
 done
 }
