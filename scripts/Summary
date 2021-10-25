@@ -38,7 +38,7 @@ while true; do
   if (( $online == 1 )); then state=$L$T△; else state=$L$O▽; fi
   
   (( $online )) && (( $c % 5 )) &&
-  country=" - `w3m -dump https://whatismyipaddress.com/ | grep City: | awk -F': ' '{print $2}'`"
+  country=" - `timeout 2s w3m -dump https://whatismyipaddress.com/ | grep City: | awk -F': ' '{print $2}'`"
   
   (( $N < $S )) && N=$(( $N+1 ))
   m=$(( $m + ((10*$S+9*($m/90))*$online-$m) / ($N) ))
