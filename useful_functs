@@ -24,3 +24,34 @@ function sci_num() {
 
 }
 
+function human_time() {
+  [[ -z $1 ]] && echo "Takes seconds" && return
+  t=$1
+  s=1
+  m=$((60*$s))
+  h=$((60*$m))
+  d=$((24*$h))
+
+  result=''
+
+  if (( $t > $d )); then
+    r=$(( $t / $d ))
+    result=$result$r"d"
+    t=$(( $t - $r*$d ))
+  fi
+  if (( $t > $h )); then
+    r=$(( $t / $h ))
+    result=$result$r"h"
+    t=$(( $t - $r*$h ))
+  fi
+  if (( $t > $m )); then
+    r=$(( $t / $m ))
+    result=$result$r"m"
+    t=$(( $t - $r*$m ))
+  fi
+
+  result=$result$t"s"
+  echo $result
+
+}
+
