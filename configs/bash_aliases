@@ -1,4 +1,7 @@
 alias vim='vim -c "set ai | set tabstop=2 | set shiftwidth=2 | set expandtab"'
 alias WebSound='~/.webSound/./webSound.sh'
 alias www='w3m duckduckgo.org'
-alias l='ls -FA'
+alias l='ls -F'
+alias L='ls -FA'
+alias ll='ls -FSho'
+alias LL='ls -FASho'
