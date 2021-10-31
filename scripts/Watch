@@ -1,0 +1,27 @@
+#!/bin/bash
+
+[[ -z $1 ]] && 
+  echo ' Enter url (and) quality. l,h,m::low,high,max. Attempts 480p by default' && exit
+
+folder='watchLater/'
+
+low='278+249'
+med='bestvideo[height<=?480][fps<=?30][vcodec!=?vp9]+bestaudio'
+high='bestvideo[height<=?1080][fps<=?30][vcodec!=?vp9]+bestaudio'
+max='best'
+
+link="$1"
+
+[[ -z `echo "$link" | grep youtube` ]] && name="untitled" || 
+  name="`youtube-dl -e $link --socket-timeout 60`"
+
+case $2 in 
+  l) quality="$low" ;;
+  h) quality="$high" ;;
+  m) quality="$max"  ;;
+  *) quality="$med"  ;;
+esac
+
+youtube-dl -f $quality $link -o "$folder$name" --socket-timeout 60
+
+
