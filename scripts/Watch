@@ -3,7 +3,7 @@
 [[ -z $1 ]] && 
   echo ' Enter url (and) quality. l,h,m::low,high,max. Attempts 480p by default' && exit
 
-folder='watchLater/'
+folder='~/watchLater/'
 
 audio='140'
 low='278+249'
@@ -14,7 +14,7 @@ max='best'
 link="$1"
 
 [[ -z `echo "$link" | grep youtube` ]] && name="untitled" || 
-  name="`youtube-dl -e $link --socket-timeout 60`"
+  name="`youtube-dl -e $link --socket-timeout 30`"
 
 case $2 in 
   a) quality="$audio" ;;
@@ -24,6 +24,6 @@ case $2 in
   *) quality="$med"  ;;
 esac
 
-youtube-dl -f $quality $link -o "$folder$name" --socket-timeout 60
+youtube-dl -f $quality $link -o "$folder$name" --socket-timeout 30
 
 
