@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cBlue='\033[34m'
+cTeal='\033[36m'
+fDark='\033[2m'
+fClear='\033[0m'
+
+slp=${3:-1}
+
+for ((i=1;i<=$2;i++)); do
+  clear
+  printf "\n$cBlue$1$fClear | $fDark$i/$2$fClear\n\n"
+  $1
+  (( $i < $2 )) && sleep $slp
+done
