@@ -1,0 +1,18 @@
+#!/bin/bash
+
+[[ -z "$1" ]] && exit
+
+data="`du -ch "$@" | sort -hr`"
+tot=`printf "$data" | head -n1`
+items=`printf "$data" | grep -v "$tot"`
+
+printf "\n\033[35m%s\033[0m\n\n\033[2m%s\033[0m\n\n" "$tot" "$items"
+
+printf "\033[1;30m Delete? (yes/N): " && read U
+
+case $U in
+yes) rm "$@" && echo ;;
+  *) echo ;;
+esac
+
+

@@ -1,0 +1,25 @@
+
+#!/bin/bash
+
+dir=~/.notes/
+
+[[ "$1" ]] && mv "$@" $dir && exit
+
+declare -A file
+c=1
+echo
+for i in `ls $dir`; do
+  printf " %d: %s\n" "$c" "$i"
+  file[$c]="$i"
+  c=$((c+1))
+done
+echo
+
+printf ' Select: n\b' && read I
+
+[[ -z "$I" ]] && exit
+
+#printf "\n ${file[$I]}"
+echo
+#echo "$dir${file[$I]}"
+nano -SixT2 "$dir${file[$I]}"
