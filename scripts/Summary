@@ -11,7 +11,8 @@ L="\033[1m"
 D="\033[2m"
 E="\033[0m"
 
-head="L I N U X"
+#head="L I N U X"
+head="`hostname`"
 internet='online'
 address='192.168.43.200'  # Raspberry Pi
 
@@ -47,24 +48,28 @@ while true; do
   (( $N < $S )) && N=$(( $N+1 ))
   m=$(( $m + ((10*$S+9*($m/90))*$online-$m) / ($N) ))
 
-  part=''
+  connection=''
   for ((l=0;l<${#internet};l++)); do
     (( 16*($l+1) < $m )) && col=$T || col=$D$R
-    part=$part$col${internet:$l:1}$E
+    connection=$connection$col${internet:$l:1}$E
   done
   perc=`printf "%*d%%" 3 $m`
   
-  show=$show" $part$state$E$D$ip$E\n"
+  show=$show" $connection$state$E$D$ip$E\n"
   
   disk_space0=`df -h | head -n1 | awk '{print $1,$2,$3,$4,$5}' | sed 's/ /.../g'`
   disk_space1=`df -h | head -n2 | tail -n1 | awk '{print $1,$2,$3,$4,$5}' | sed 's/ /..../g'`
   show=$show"\n $D$B$disk_space0$E\n"
   show=$show" $D $disk_space1$E\n"
   
-  online=`ping $address -c1 -W2 2>&1 | grep '%' | cut -d',' -f2 | cut -d" " -f2`
-  online=${online:-0}
-  if (( $online == "1" )); then col=$T; else col=$D$R; fi
-  show=$show"\n$D$B RaspberryPi: $E$col$address\n $E"
+  mem=` free | egrep Mem: | awk '{print ((($3/(1+$2))*1000)+.005)/10}' | cut -b '1-5' `
+  swp=` free | egrep Swap: | awk '{print ((($3/(1+$2))*1000)+.005)/10}' | cut -b '1-5' `
+
+  show=$show" $D $D Memory:  $E$O$mem%\t$E$D Swap: $E$O$swp%$E\n"
+#  online=`ping $address -c1 -W2 2>&1 | grep '%' | cut -d',' -f2 | cut -d" " -f2`
+#  online=${online:-0}
+#  if (( $online == "1" )); then col=$T; else col=$D$R; fi
+#  show=$show"\n$D$B RaspberryPi: $E$col$address\n $E"
 
   #clear
   #echo -e `printf '%s' "$show"`
