@@ -1,0 +1,31 @@
+#!/bin/bash
+
+host='pi'
+addr='192.168.43.2'
+suff='mkv'
+
+run=1
+
+function scrape() {
+  [[ -z $1 ]] &&
+    ssh $host@$addr "
+    find /media ~/ -iname *$suff | grep -v 'local\|config'" &&
+    return
+  case "$1" in
+    p) ssh $host@$addr "cd /; cat `scrape | grep -i $N`" - | mpv - ;;
+    *) echo -e '[type] | [file] [p] for play' ;;
+  esac
+}
+
+while (( $run )); do
+  clear
+  echo -e "\033[2m Type: $suff\033[0m\n"
+  scrape
+
+  printf "\n\033[2m t p\033[0m\r"; read -rep " " N C
+
+  [[ -z $N ]] && break
+  [[ -z $C ]] && suff=$N || scrape $C
+done
+
+echo

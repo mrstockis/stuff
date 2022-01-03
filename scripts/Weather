@@ -1,0 +1,44 @@
+#!/bin/bash
+
+O='\033[33m'
+T='\033[36m'
+D='\033[2m'
+E='\033[0m'
+
+declare -A loc
+
+url="https://api.openweathermap.org/data/2.5/onecall?"
+key="a622bf2d451f3e60a87c705a4178d801"
+opt="&exclude=minutely,hourly&units=metric&appid=" 
+
+loc[Whangarei]="lat=-35.73&lon=174.32"
+#loc[Rukuwai]="lat=-35.45&lon=174.28"
+
+whr=$1
+[[ -z $1 ]] && whr=Whangarei ||
+  loc["$1"]="lat="`
+    grep -i $1 .cities.csv |
+    head -n1 |
+    cut -d',' -f 3-4 |
+    sed 's/\,/\&lon=/g' |
+    tr -d \"
+  `
+
+
+function getWeather() {
+  curl "$url${loc[$whr]}$opt$key" -so .tmpWeather
+}
+
+function showData() {
+  lim=10
+  [[ $2 ]] && lim=$2
+  printf "$D$T %s$E\n$O%s\t%s\t%s$E\n" "$whr" 'cels' 'm/s' 'sky'
+  cat .tmpWeather |
+    jq -j '.daily | .[] | .temp.day," ",.wind_speed," ",.weather[].main,"\n"' |
+    head -n $lim | sed 's/\s/\t/g'
+}
+
+getWeather
+clear; showData $2 | less -r
+
+rm .tmpWeather

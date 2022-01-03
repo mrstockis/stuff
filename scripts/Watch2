@@ -1,0 +1,79 @@
+#!/bin/bash
+
+folder=~/watchLater/
+queue=watchQueue
+
+function addQueue() {
+  echo "Adding to queue"
+
+  audio='140'
+  low='278+249'
+  med='bestvideo[height<=?480][fps<=?30][vcodec!=?vp9]+bestaudio'
+  high='bestvideo[height<=?1080][fps<=?30][vcodec!=?vp9]+bestaudio'
+  max='best'
+
+  link="$1"
+
+  [[ -z `echo "$link" | grep youtube` ]] && name="untitled" || 
+    name="`youtube-dl -eq $link --socket-timeout 30 | sed 's/ /_/g'`"
+
+  (( `grep $name $folder$queue | wc -l` )) && echo Already in queue && return
+
+  case $2 in 
+    a) quality="$audio" ;;
+    l) quality="$low" ;;
+    h) quality="$high" ;;
+    m) quality="$max"  ;;
+    *) quality="$med"  ;;
+  esac
+
+
+  echo "$name;$quality;$link" >> $folder$queue
+  #youtube-dl -f $quality $link -o $folder$name $3
+  #clearQueue
+  getQueue
+}
+
+function getQueue() {
+
+  echo "Checking queue"
+  #pkill youtube-dl
+  active=`ps -a | grep "youtube-dl" | wc -l`
+  (( $active )) && echo "Already active" && exit
+  
+  clearQueue
+  (( `cat $folder$queue | wc -l` )) &&
+  for order in `cat $folder$queue`; do
+    `echo "$order" | awk -F";" '{print "youtube-dl","-iqf",$2,$3,"-o","~/watchLater/"$1}'`    #2>/dev/null #&
+    clearQueue
+  done 2>/dev/null & #2>/dev/null
+  #cat $folder$queue | awk -F";" '{print "youtube-dl","-f",$2,$3,"-o","~/watchLater/"$1}'
+
+  #clearQueue
+}
+
+function clearQueue() {
+  #return
+  touch $folder"qtmp"
+  for name in `cat $folder$queue | awk -F';' '{print $1}'`; do
+    (( `ls $folder | grep -v '\.f\|\.part\|\.temp' | grep $name | wc -l` == 0 )) &&
+    grep "$name" $folder$queue >> $folder"qtmp"
+  done
+  mv $folder"qtmp" $folder$queue
+}
+
+[[ -z $1 ]] && getQueue && exit
+
+[[ $1 == 'h' ]] && 
+  echo ' Enter url (and) quality. l,h,m::low,high,max. Attempts 480p by default' && exit
+  
+[[ $1 ]] && addQueue $@
+
+
+
+exit
+'
+  Watch '' -> Info ; check ytdl activity ; .if !ytdl then. get queue ; exit
+  Watch url -> add to queue ; check ytdl activity ; if !ytdl then. get queue ; exit
+'
+
