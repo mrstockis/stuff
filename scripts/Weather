@@ -8,7 +8,7 @@ E='\033[0m'
 declare -A loc
 
 url="https://api.openweathermap.org/data/2.5/onecall?"
-key="a622bf2d451f3e60a87c705a4178d801"
+key=""
 opt="&exclude=minutely,hourly&units=metric&appid=" 
 
 loc[Whangarei]="lat=-35.73&lon=174.32"
