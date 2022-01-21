@@ -61,7 +61,7 @@ while true; do
   (( `cat ~/watchLater/watchQueue | wc -l` < 1 )) && WQ=0 || WQ=1
   (( $WQ )) && swq=watchQueue || swq=''
   (( $m > 80 )) && ( (( $wq )) && col=$D$T || col=$R ) || col=$W
-  (( $request )) && (( $WQ )) && (( $m > 80 )) && request=0 && ~/./Watch >/dev/null
+  (( $request )) && (( $WQ )) && (( $m > 80 )) && request=0 && /usr/bin/./Watch >/dev/null
   show=$show"$col  $swq $E"
 
   disk_space0=`df -h | head -n1 | awk '{print $1,$2,$3,$4,$5}' | sed 's/ /.../g'`

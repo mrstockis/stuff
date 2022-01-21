@@ -110,14 +110,14 @@ printf " Downloading the"
 pbar "Answer" "to ~/Life/Universe/Everything/"
 read
 
-exit
+#exit
 
 sample="https://www.youtube.com/watch?v=JRfuAukYTKg"
 
 echo; echo
 echo by rawyson - with progressbar
 echo
-#time (download "$sample"; progress)
+download "$sample"; progress
 wait; rm 140.m4a
 
 exit
