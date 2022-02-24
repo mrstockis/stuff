@@ -64,8 +64,8 @@ while true; do
   (( $request )) && (( $WQ )) && (( $m > 80 )) && request=0 && /usr/bin/./Watch >/dev/null
   show=$show"$col  $swq $E"
 
-  disk_space0=`df -h | head -n1 | awk '{print $1,$2,$3,$4,$5}' | sed 's/ /.../g'`
-  disk_space1=`df -h | head -n2 | tail -n1 | awk '{print $1,$2,$3,$4,$5}' | sed 's/ /..../g'`
+  disk_space0=`sudo df -h | head -n1 | awk '{print $1,$2,$3,$4,$5}' | sed 's/ /.../g'`
+  disk_space1=`sudo df -h | head -n2 | tail -n1 | awk '{print $1,$2,$3,$4,$5}' | sed 's/ /..../g'`
   show=$show"\n $D$B$disk_space0$E\n"
   show=$show" $D $disk_space1$E\n"
   
