@@ -35,6 +35,7 @@ actions=(
 range=${#tasks[@]}
 
 # Initiate
+tput civis
 printf "$E"
 for (( i=0; i<$range; i++)); do
   if (( ${active[$i]} )); then
@@ -57,3 +58,4 @@ for (( i=0; i<$range; i++ )); do
   fi
 done; printf "\n$E$D$dash \n$E"
 
+tput cnorm
