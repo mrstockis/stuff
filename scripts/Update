@@ -1,7 +1,9 @@
 #!/bin/bash
 
-E="\033[0m"; D="\033[2m"; B="\033[1m"
-r="\033[1;31m"; g="\033[1;32m"; b="\033[1;34m"; y="\033[1;33m"
+#E="\033[0m"; D="\033[2m"; B="\033[1m"
+#r="\033[1;31m"; g="\033[1;32m"; b="\033[1;34m"; y="\033[1;33m"
+E="\e[0m"; D="\e[2m"; B="\e[1m"
+r="\e[1;31m"; g="\e[1;32m"; b="\e[1;34m"; y="\e[1;33m"
 space="  "; dash=" " fdash=""
 
 # sudo -k # Reset sudo timestamp
@@ -17,7 +19,7 @@ active=( 1 1 0 1 1 1 )
 #        u u u u u o
 
 tasks=(
-	"Update"
+  "Update"
   "Upgrade"
   "DistroUpgrade"
   "autoRemove"
@@ -50,12 +52,13 @@ for (( i=0; i<$range; i++ )); do
     eval "${actions[a]}"
     task_string="$space${tasks[$i]}"
     string_length=${#task_string}
-    for ((l=0; l<$string_length; l++)); do
-      printf "\b"
-      dash="$dash-"
-    done
+    tput cub $string_length
+    #for ((l=0; l<$string_length; l++)); do
+    #  printf "\b"
+    #  dash="$dash-"
+    #done
     printf "$space$g${tasks[$i]}"
   fi
-done; printf "\n$E$D$dash \n$E"
+done; printf "\n$E" #$D$dash \n$E"
 
 tput cnorm
