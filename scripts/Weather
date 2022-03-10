@@ -11,18 +11,16 @@ url="https://api.openweathermap.org/data/2.5/onecall?"
 key=""
 opt="&exclude=minutely,hourly&units=metric&appid=" 
 
-loc[Whangarei]="lat=-35.73&lon=174.32"
-#loc[Rukuwai]="lat=-35.45&lon=174.28"
-
 whr=$1
-[[ -z $1 ]] && whr=Whangarei ||
-  loc["$1"]="lat="`
-    grep -i $1 .cities.csv |
-    head -n1 |
-    cut -d',' -f 3-4 |
-    sed 's/\,/\&lon=/g' |
-    tr -d \"
-  `
+[[ -z $1 ]] && whr='Christchurch'
+
+loc["$whr"]="lat="`
+  grep -i "$whr" .cities.csv |
+	  head -n1 |
+	  cut -d',' -f 3-4 |
+	  sed 's/\,/\&lon=/g' |
+	  tr -d \"
+`
 
 
 function getWeather() {
@@ -39,6 +37,6 @@ function showData() {
 }
 
 getWeather
-clear; showData $2 | less -r
+clear; showData $2 | less -R
 
 rm .tmpWeather
