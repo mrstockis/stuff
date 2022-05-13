@@ -5,11 +5,15 @@ dir=~/.notes/
 
 [[ "$1" ]] && mv "$@" $dir && exit
 
+while true; do
+
+clear; echo -e "\033[33m N o t e s\033[0m"
+
 declare -A file
 c=1
 echo
 for i in `ls $dir`; do
-  printf " %d: %s\n" "$c" "$i"
+  printf " %2d: %s\n" "$c" "$i"
   file[$c]="$i"
   c=$((c+1))
 done
@@ -17,9 +21,11 @@ echo
 
 printf ' Select: n\b' && read I
 
-[[ -z "$I" ]] && exit
+[[ -z "$I" ]] && clear && exit
 
 #printf "\n ${file[$I]}"
 echo
 #echo "$dir${file[$I]}"
 nano -SixT2 "$dir${file[$I]}"
+
+done
