@@ -26,6 +26,6 @@ printf ' Select: n\b' && read I
 #printf "\n ${file[$I]}"
 echo
 #echo "$dir${file[$I]}"
-nano -SixT2 "$dir${file[$I]}"
+nano -mSixT2 "$dir${file[$I]}"
 
 done
