@@ -1,7 +1,7 @@
 #!/bin/bash
 
 [[ -z $1 ]] || [[ -z $2 ]] &&
-  echo "Enter text and file to be appended 'append text file' " &&
+  echo "Enter text and file to be appended to 'append text file' " &&
   exit
 
 echo "$1" >> "$2"

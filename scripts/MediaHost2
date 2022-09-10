@@ -1,0 +1,49 @@
+#!/bin/bash
+
+host='pi'
+addr='192.168.43.2'
+path="/media/$host/"
+
+run=1
+
+function scrape() {
+  ssh $host@$addr "ls $path | egrep -iv *.srt\|.nfo "
+}
+
+function play() {
+  case "$1" in
+    p) ssh $host@$addr "cd $path; cat `scrape | grep -i $N`" - | mpv - ;;
+    *) echo -e '[type] | [file] [p] for play' ;;
+  esac
+}
+
+function chPath() {
+  pathList=(`echo "$path" | sed 's/\// /g'`)
+  pathLen="${#pathList[@]}"
+
+  if [ "$1" == ".." ]; then
+    pathTmp="/"
+    for (( i=0 ; i<pathLen -1 ; i++ )); do
+      pathTmp=$pathTmp"${pathList[$i]}/"
+    done
+    path=$pathTmp
+  else
+    hit=`scrape | grep -i $1`
+    path=$path$hit"/"
+  fi
+}
+
+while (( $run )); do
+  clear
+  echo -e "\033[2m $path \033[0m\n"
+
+  scrape
+
+  printf "\n\033[2m nav p\033[0m\r"; read -rep ":" N C
+
+  [[ -z $N ]] && break
+  [[ $C ]] && play $C || chPath $N
+done
+
+echo
+
