@@ -1,31 +1,55 @@
 #!/bin/bash
 
 host='pi'
-addr='192.168.43.2'
-suff='mkv'
+addr='192.168.68.113'
+path="/media/$host/"
 
 run=1
 
 function scrape() {
-  [[ -z $1 ]] &&
-    ssh $host@$addr "
-    find /media ~/ -iname *$suff | grep -v 'local\|config'" &&
-    return
+	ssh $host@$addr "ls -p "$path" | egrep -iv *.srt\|.nfo"
+}
+
+function play() {
   case "$1" in
-    p) ssh $host@$addr "cd /; cat `scrape | grep -i $N`" - | mpv - ;;
+    p) ssh $host@$addr "cd $path; cat `scrape | grep -i $N`" - | mpv --force-seekable=yes - ;;
     *) echo -e '[type] | [file] [p] for play' ;;
   esac
 }
 
+function chPath() {
+  pathList=(`echo "$path" | sed 's/\// /g'`)
+  pathLen="${#pathList[@]}"
+
+  if [ "$1" == ".." ]; then
+    pathTmp="/"
+    for (( i=0 ; i<pathLen -1 ; i++ )); do
+      pathTmp="$pathTmp${pathList[$i]}/"
+    done
+    path="$pathTmp"
+  else
+    hit="`scrape | grep -i $1 | head -n1`"
+    path="$path$hit"
+  fi
+}
+
 while (( $run )); do
   clear
-  echo -e "\033[2m Type: $suff\033[0m\n"
-  scrape
+  echo -e "\033[2m $path \033[0m\n"
 
-  printf "\n\033[2m t p\033[0m\r"; read -rep " " N C
+  while read f; do
+	  if [[ `echo "$f" | grep -e '/$' | wc -w` -eq 1 ]]; then
+		  echo -e "\033[34m$f\033[0m"
+	  else
+		  echo "$f"
+	  fi
+  done <<< `scrape`
+
+  printf "\n\033[2m nav p\033[0m\r"; read -rep ":" N C
 
   [[ -z $N ]] && break
-  [[ -z $C ]] && suff=$N || scrape $C
+  [[ $C ]] && play $C || chPath $N
 done
 
 echo
+
