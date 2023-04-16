@@ -1,4 +1,29 @@
-¤!/bin/bash
+#!/bin/bash
+
+printf " UTC $(date +%H:%M -u)   Bosses\n"
+while true; do
+#watch -tcn60 '
+H="$(date +%H -u)"
+M="$(date +%M -u | cut -c 1)"
+T="$H:$M"
+if [ -z "$(grep $T gw2Timer)" ]; then
+	M=$((M-1)); T="$H:$M"
+fi
+clear
+printf "\033[33m$(date +%H:%M -u)\033[0m     \033[34m World boss \033[0m \n"
+grep "$T" gw2Timer -A 4 | cut -c1-35
+while read hit; do
+	length=`echo "$hit" | wc -c`
+	if [[ length -gt 36 ]]; then 
+		printf "\033[31m%s\033[0m\n" "`echo "$hit" | cut -c1-10,36-`"
+	fi
+done <<< `grep "$T" gw2Timer -A 4`
+#'
+sleep 60
+done
+
+exit
+
 
 watch -tn60 '
 printf " UTC  $(date +%H:%M -u)	World boss	Hardcore world boss\n"
