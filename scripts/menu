@@ -28,15 +28,22 @@ S y n t a x
 #
 
 declare -A menu
+source="$1"
+
+function makeList() {
+  index=0
+  while read F; do
+    menu[$index]="$F"
+    ((index++))
+  done <<< `eval "$source"`
+}
+
+makeList
+
 show_path=0
 
-index=0
-for file in "$@";
-do
-    menu[$index]="$file"
-    ((index++))
-done
-
+#echo "${menu[@]}"
+#read
 
 while true;
 do
@@ -49,15 +56,15 @@ do
             ([ $show_path == 1 ] && echo "${menu[$i]}") ||
             echo "${menu[$i]}" | sed 's/\//\n/g' | tail -n 1
             `
-         display+=" $i: $file\n"
+         display+=" \033[1;33m$i\033[0m: $file\n"
     done
     
     display+="\n\033[1;30m > \033[0m"
     
-    clear; printf "$display"; read -re N A
+    clear; printf "$display\r"; read -re N A
 
     if [ "$A" ]; then
-        history -s "$A"
+        history -s "$N $A"
     fi
     
     if [ -z "$N" ]; then
@@ -74,10 +81,36 @@ do
             action="$N $A" 
             continue
         fi
-        doAction=` echo "$action" | sed "s/VAR/${menu[$N]}/g" `
-        eval $doAction
-        printf "\nX\r"
-        read
+
+        # Experiment START
+        [[ $N+1 -gt $index ]] && continue
+        tput cup 3 0
+        display=''
+        for ((i=0 ; i<index ; i++));
+        do
+            C=''
+            [[ $i -eq $N ]] && C='\033[36m'
+            file=`
+                ([ $show_path == 1 ] && echo "${menu[$i]}") ||
+                echo "${menu[$i]}" | sed 's/\//\n/g' | tail -n 1
+                `
+            display+=" \033[1;33m$i\033[0m:$C $file\033[0m\n"
+        done
+        printf "$display\n"
+        
+        dash=''
+        beam=`tput cols`
+	((beam--))  # Make symmetrical since start is indented
+        for ((i=0 ; i<$beam ; i++)); do
+          printf "-"
+        done; echo;echo
+        #Experiment END
+        
+        doAction="` echo "$action" | sed 's/VAR/"${menu[$N]}"/g' `"
+        eval "$doAction"
+        #printf "\nX\r"
+        #read
+        makeList
     fi
 
 done
