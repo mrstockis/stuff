@@ -5,18 +5,53 @@ T='\033[36m'
 D='\033[2m'
 E='\033[0m'
 
+#echo -e "$O O \t$E $T T\t$E $D D \t $E E"; exit
+
 declare -A loc
 
 url="https://api.openweathermap.org/data/2.5/onecall?"
-key=""
+key="a622bf2d451f3e60a87c705a4178d801"
 opt="&exclude=minutely,hourly&units=metric&appid=" 
 
+whr=''
 whr=$1
-[[ -z $1 ]] && whr='Christchurch'
+[[ -z $1 ]] && tput sc && read -p "City: " whr && tput rc #whr='Christchurch'
+[[ -z $whr ]] && exit
+[[ $whr == '' ]] && exit
+pick=1
+c=` grep -ci "$whr" .cities.csv`
+if [[ $c -gt 1 ]]; then
+	tput sc
+	echo -e "$O Multiple hits, which city did you have in mind?$E"
+	c=1
+	while read city; do
+		echo "   $c:  $city"
+		c=$((c+1))
+	done <<< `grep -i "$whr" .cities.csv | cut -d',' -f 1,5,8 `
+	pick2=''
+	read -p "N: " pick2
+	if [[ $pick2 == '' ]]; then
+		tput rc
+		for i in `seq 1 $(($c+1))`; do
+			for i in `seq 1 $(tput cols)`; do
+				printf " "
+			done
+		done
+		tput rc
+		bash Weather && exit #|| pick=$pick2
+	else
+		pick=$pick2
+	fi
+	#echo $pick
+	#exit
+fi
+
+whr=` grep -i "$whr" .cities.csv | head -n $pick | tail -n1 | cut -d',' -f1`
+WHR=` grep -i "$whr" .cities.csv | head -n $pick | tail -n1 | cut -d',' -f 1,5,8 | tr -d '"' |sed 's/,/, /g' `
 
 loc["$whr"]="lat="`
   grep -i "$whr" .cities.csv |
-	  head -n1 |
+	  head -n $pick | tail -n1 |
 	  cut -d',' -f 3-4 |
 	  sed 's/\,/\&lon=/g' |
 	  tr -d \"
@@ -37,6 +72,48 @@ function showData() {
 }
 
 getWeather
-clear; showData $2 | less -R
+clear; #showData $2 #| less -R
 
-rm .tmpWeather
+#rm .tmpWeather
+
+lim=10
+[[ $2 ]] && lim=$2
+#echo -e "$D$T$WHR$E\n"
+printf "$T%s, $E" "`echo $WHR | cut -d',' -f1`"
+printf "$D%s -$E" "`echo $WHR | cut -d',' -f2`"
+printf "$D%s$E  " "`echo $WHR | cut -d',' -f3`"
+printf "\n$O%6s%10s%8s$E\n" 'Date' 'Wind' 'Sky'
+
+offset=` cat .tmpWeather | jq '.timezone_offset' `
+
+sky_clear=`echo -e "\033[33m☀ \033[0m"`
+sky_cloud=`echo -e "\033[1m☁  \033[0m"`
+sky_rainy=`echo -e "\033[34m🌢 \033[0m"`
+
+#exit
+while read day; do
+	dayTime=$(date --date=@$((`echo "$day" | awk '{print $1}'`+$offset)))
+	dayTime=` printf "%s" "$dayTime" | cut -d' ' -f1-2 `
+	cels=` echo "$day" | awk '{print $2}' `
+	cels=$( echo $((`echo "$cels" | awk '{print 100*$1+5}'`/10)) | awk '{print $1/10}' )
+	wind=` echo "$day" | awk '{print $3}' `
+	wind=$( echo $((`echo "$wind" | awk '{print 100*$1+5}'`/10)) | awk '{print $1/10}' )
+	sky="` echo "$day" | awk '{print $4}' `"
+	case "$sky" in
+		Clear)
+			sky="$sky_clear";;
+		Clouds)
+			sky="$sky_cloud";;
+		Rain)
+			sky="$sky_rainy";;
+	esac
+	printf "%8s%8s%8s %2s\n" "$dayTime" "$cels" "$wind" "$sky"
+
+done <<< `
+cat .tmpWeather | jq -j '.daily | .[] | .dt," ",.wind_speed," ",.temp.day," ",.weather[].main,"\n"' | 
+		head -n $lim ` # | sed 's/\s/\t/g' `
+
+
+read
+./Weather
+
