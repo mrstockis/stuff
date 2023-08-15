@@ -1,18 +1,22 @@
 #!/bin/bash
 
 file="$2"
-last=`ls -l | grep "$file" | grep -oP '\d\d:\d\d'`
+
+#last=`ls -l | grep "$file" | grep -oP '\d\d:\d\d'`
+cat "$file" > ~/.tmpSpam  #last
 
 clear
 "$@" 
 
 while true; do
 	sleep 1
-	now=`ls -l | grep "$file" | grep -oP '\d\d:\d\d'`
-	[[ $last == $now ]] && continue
+	#now=`ls -l | grep "$file" | grep -oP '\d\d:\d\d'`
+	changed=`diff -q "$file" ~/.tmpSpam`
+	[[ $changed ]] || continue
 	
 	# This is othwerwise
-	last="$now"
+	#last="$now"
+	cat "$file" > ~/.tmpSpam  #last
 	clear
 	"$@"
 done

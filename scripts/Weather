@@ -1,6 +1,8 @@
 #!/bin/bash
 
 O='\033[33m'
+B='\033[34m'
+P='\033[35m'
 T='\033[36m'
 D='\033[2m'
 E='\033[0m'
@@ -9,15 +11,51 @@ E='\033[0m'
 
 declare -A loc
 
+lim=10
+[[ $2 ]] && lim=$2
+
 url="https://api.openweathermap.org/data/2.5/onecall?"
 key="a622bf2d451f3e60a87c705a4178d801"
 opt="&exclude=minutely,hourly&units=metric&appid=" 
 
+#function cities() {
+#	cat /usr/bin/Weather | grep 'Weather;exit' -A 42000 | head -n 41000
+#}
+
+
+#function population() {
+#	pop=` echo "$@" | sed 's/, /+/g' `+population
+#	w3m "https://www.google.com/search?q=$pop" | grep 'Population :' | cut -d: -f2
+#	grep -i "$@" .cities.csv
+#}
+
+function decimal() {
+  n=` echo "$1" | sed 's/[, ]//g' `
+  p=${2:-2}
+  (( ${#n} < 2 )) && d=0 || d=${n:1:$p}
+  n=${n:0:1}.$d
+  echo $n 
+}
+function sci_num() {
+  n=` echo "$1" | sed 's/[, ]//g' `
+  p=${2:-2} #` [[ -z $2  ]] && echo 2 || echo $2 `
+  s=${#n}
+  m=$(( $s-1 ))
+  d=` (( $m-2 < 1 )) && echo 0 || echo $(( $m-$p ))`
+  n=$(( $n / 10**$d ))
+  
+  n=`decimal $n $p`
+
+  echo $n'e'$m
+}
+
+tput civis
+
 whr=''
 whr=$1
 [[ -z $1 ]] && tput sc && read -p "City: " whr && tput rc #whr='Christchurch'
-[[ -z $whr ]] && exit
-[[ $whr == '' ]] && exit
+[[ -z $whr ]] && tput cnorm && exit
+[[ $whr == '' ]] && tput cnorm && exit
 pick=1
 c=` grep -ci "$whr" .cities.csv`
 if [[ $c -gt 1 ]]; then
@@ -38,7 +76,7 @@ if [[ $c -gt 1 ]]; then
 			done
 		done
 		tput rc
-		bash Weather && exit #|| pick=$pick2
+		Weather '' $lim && tput cnorm && exit #|| pick=$pick2
 	else
 		pick=$pick2
 	fi
@@ -46,8 +84,11 @@ if [[ $c -gt 1 ]]; then
 	#exit
 fi
 
-whr=` grep -i "$whr" .cities.csv | head -n $pick | tail -n1 | cut -d',' -f1`
-WHR=` grep -i "$whr" .cities.csv | head -n $pick | tail -n1 | cut -d',' -f 1,5,8 | tr -d '"' |sed 's/,/, /g' `
+whr=` grep -i "$whr" .cities.csv | head -n $pick | tail -n1 | cut -d, -f1`
+WHR=` grep -i "$whr" .cities.csv | head -n $pick | tail -n1 | cut -d, -f 1,5,8 | tr -d '"' |sed 's/,/, /g' `
+pop=` grep -i "$whr" .cities.csv | head -n $pick | tail -n1 |rev| cut -d, -f2 |rev| tr -d '"' |sed 's/,/, /g' `
+pop=` sci_num $pop `
+
 
 loc["$whr"]="lat="`
   grep -i "$whr" .cities.csv |
@@ -74,23 +115,26 @@ function showData() {
 getWeather
 clear; #showData $2 #| less -R
 
-#rm .tmpWeather
 
-lim=10
-[[ $2 ]] && lim=$2
-#echo -e "$D$T$WHR$E\n"
-printf "$T%s, $E" "`echo $WHR | cut -d',' -f1`"
-printf "$D%s -$E" "`echo $WHR | cut -d',' -f2`"
-printf "$D%s$E  " "`echo $WHR | cut -d',' -f3`"
+printf "$T%s $B %s $E" "`echo $WHR | cut -d',' -f1`" "$pop"
+#printf "$B %s $E" "$pop"
+#printf "$D%s$E" "`echo $WHR | cut -d',' -f2`"
+tput sc
+printf "%s$E" "`echo $WHR | cut -d',' -f2`" | pv -qL 15
+sleep .8
+tput rc
+printf "$D%s$E           " "`echo $WHR | cut -d',' -f3`"
 printf "\n$O%6s%10s%8s$E\n" 'Date' 'Wind' 'Sky'
 
 offset=` cat .tmpWeather | jq '.timezone_offset' `
 
+
 sky_clear=`echo -e "\033[33m☀ \033[0m"`
 sky_cloud=`echo -e "\033[1m☁  \033[0m"`
-sky_rainy=`echo -e "\033[34m🌢 \033[0m"`
+sky_rainy=`echo -e "\033[34m🌧 \033[0m"`
+sky_snowy=`echo -e "\033[0m❅ \033[0m"`
 
-#exit
+c=1
 while read day; do
 	dayTime=$(date --date=@$((`echo "$day" | awk '{print $1}'`+$offset)))
 	dayTime=` printf "%s" "$dayTime" | cut -d' ' -f1-2 `
@@ -106,8 +150,11 @@ while read day; do
 			sky="$sky_cloud";;
 		Rain)
 			sky="$sky_rainy";;
+		Snow)
+			sky="$sky_snowy";;
 	esac
-	printf "%8s%8s%8s %2s\n" "$dayTime" "$cels" "$wind" "$sky"
+	printf "%8s%8s%8s %2s\n" "$dayTime" "$cels" "$wind" "$sky" | pv -qL $((c*50))
+	c=$((c+1))
 
 done <<< `
 cat .tmpWeather | jq -j '.daily | .[] | .dt," ",.wind_speed," ",.temp.day," ",.weather[].main,"\n"' | 
@@ -115,5 +162,5 @@ cat .tmpWeather | jq -j '.daily | .[] | .dt," ",.wind_speed," ",.temp.day," ",.w
 
 
 read
-./Weather
-
+Weather '' $lim
+tput cnorm && exit
