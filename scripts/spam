@@ -1,0 +1,18 @@
+#!/bin/bash
+
+file="$2"
+last=`ls -l | grep "$file" | grep -oP '\d\d:\d\d'`
+
+clear
+"$@" 
+
+while true; do
+	sleep 1
+	now=`ls -l | grep "$file" | grep -oP '\d\d:\d\d'`
+	[[ $last == $now ]] && continue
+	
+	# This is othwerwise
+	last="$now"
+	clear
+	"$@"
+done
