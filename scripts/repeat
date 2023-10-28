@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#file="$2"
+
+read -ep "FileToWatch: " file
+
+tmpFile=~/.tmpRepeat`date +%H%M%S`
+
+cat "$file" > "$tmpFile"
+
+clear
+"$@" 
+
+while true; do
+	read -t1 && break
+
+	changed=`diff -q "$file" "$tmpFile"`
+	[[ $changed ]] || continue
+	
+	cat "$file" > "$tmpFile"
+	clear
+	"$@"
+done
+
+rm "$tmpFile"
