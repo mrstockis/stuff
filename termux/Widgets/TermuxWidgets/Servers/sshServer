@@ -1,0 +1,12 @@
+
+# pkill sshd; sleep 1
+
+sshd -q
+
+user=` whoami `
+addr=` ifconfig | tail -n3 | grep inet | awk '{print $2}' `
+
+termux-notification -t SSH -c "\
+Access:
+$user@$addr  -p 8022"\
+ --action "pkill sshd"

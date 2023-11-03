@@ -110,7 +110,7 @@ printf " Downloading the"
 pbar "Answer" "to ~/Life/Universe/Everything/"
 read
 
-#exit
+exit
 
 sample="https://www.youtube.com/watch?v=JRfuAukYTKg"
 

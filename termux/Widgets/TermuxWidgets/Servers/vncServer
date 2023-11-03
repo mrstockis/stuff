@@ -1,0 +1,6 @@
+vncserver -localhost -geometry 1366x768
+
+
+
+termux-notification -t VNCserver -c "Press to kill"\
+ --action "vncserver -kill :1"

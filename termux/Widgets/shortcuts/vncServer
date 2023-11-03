@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bash ~/TermuxWidgets/Servers/vncServer

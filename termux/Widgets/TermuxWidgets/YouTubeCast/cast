@@ -1,0 +1,17 @@
+#!/bin/bash
+
+url=`termux-clipboard-get`
+echo -e "  \033[33m  $url"
+title="`youtube-dl -e $url 2>/dev/null`"
+clear
+echo -e "   \033[34m $title \033[0m "
+
+read -p "    Start: " start
+start=`echo "$start" | sed 's/ /:/g'`
+read -p "    Duration: " durat
+durat=`echo "$durat" | sed 's/ /:/g'`
+
+[ -z "$start" ] || start="--start="`echo "$start" | sed 's/ /:/g'`
+[ -z "$durat" ] || durat="--length="`echo "$durat" | sed 's/ /:/g'`
+
+mpv --video=no "$url" `echo "$start"` `echo "$durat"`

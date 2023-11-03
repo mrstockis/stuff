@@ -25,7 +25,7 @@ uint pf(uint x) {
 	return p;
 }
 
-void main() {
+int main() {
 	uint input;
 	printf("Largerst prime factor: ");
 	scanf("%d",&input);
