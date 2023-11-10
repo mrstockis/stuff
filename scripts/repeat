@@ -7,19 +7,34 @@ read -ep "FileToWatch: " file
 tmpFile=~/.tmpRepeat`date +%H%M%S`
 
 cat "$file" > "$tmpFile"
-
 clear
 "$@" 
 
 while true; do
-	read -t1 && break
+	f=0  # finish/quit with to taps on enter
+	read -t1 && clear && f=2 && read -t1 && f=1 || ( (( $f > 1 )) && "$@" )
+	(( $f == 1 )) && break
 
 	changed=`diff -q "$file" "$tmpFile"`
 	[[ $changed ]] || continue
 	
 	cat "$file" > "$tmpFile"
-	clear
+	
+	# V1
+	#clear
+	#"$@"
+	
+	# V2  clear lines, allowing smoother update than `clear`
+	tput cup 0 0
 	"$@"
+	tput cup 0 0
+	while read line; do
+		if [[ `echo "$line" | grep -c '|'` -gt 0 ]]; then 
+			echo ""
+		else
+			echo -e "$line\033[0K"
+		fi
+	done <<< `"$@"`
 done
 
 rm "$tmpFile"
