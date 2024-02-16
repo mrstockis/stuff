@@ -1,6 +1,0 @@
-#!/bin/bash
-
-echo "---------------"
-printf "`grep Lang 2Facit` \n`grep $1: 2Facit` \n"
-w3m -dump https://projecteuler.net/problem=$1 | grep rating -A 99 | egrep -v Policy
-echo "---------------"

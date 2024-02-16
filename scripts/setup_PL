@@ -16,13 +16,13 @@ mpv -fs --really-quiet ${link["$v"]}
 
 printf "Generates Links.."
 echo 'LINKS=("' >> ~/$N
-youtube-dl -gf best $P >> ~/$N
+yt-dlp -gf best $P >> ~/$N
 echo '")' >> ~/"$N"
 
 
 printf ""$B"Generates Selection.."
 echo 'TITELS=("' >> ~/"$N"
-youtube-dl -e $P | cut -f1- -d" " --output-delimiter="_" >> ~/"$N"
+yt-dlp -e $P | cut -f1- -d" " --output-delimiter="_" >> ~/"$N"
 echo '")' >> ~/"$N"
 
 echo "
