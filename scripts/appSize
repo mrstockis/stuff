@@ -1,0 +1,42 @@
+#!/bin/bash
+
+
+if [[ $1 == '-h' ]]; then
+	echo -e " Usage\n appSize <filter find> <filter exclude>"
+	echo -e ' appSize "MB" "(lib|mesa)"'
+	exit
+fi
+
+if [[ -z $1 ]]; then
+	search='.'
+else
+	search="$1"
+fi
+
+if [[ -z $2 ]]; then
+	exclude='"'
+else
+	exclude="$2"
+fi
+
+# Dev test
+#search='MB'
+#exclude='(lib|mesa)'
+
+apt show ` apt list --installed 2>/dev/null | cut -d'/' -f1 ` 2>/dev/null |
+	grep -P '(Package:|Installed-Size|^$)' | grep -v 'Dpkg' | cut -d' ' -f2- | tac |
+	sed -r 's/$/;/g' |
+	sed -r 's/^;$/!/g' |
+	tr -d '\n' |
+	sed 's/;!/\n/g' |
+	sed 's/\sMB/MB/g' | sed 's/\skB/kB/g' | sed 's/\sB/B/g' |
+	sort -h |   #awk -F';' '{print $2,";",$1}' | 
+	sed 's/MB/ MB/g' | sed 's/kB/ kB/g' | sed -r 's/[^Mk]B/ B/g' |
+	grep -P "$search" | grep -vP "$exclude" | grep -vP 'unknown;' |
+	column -ts';' -R 1
+
+
+#cat appSized | sed -r 's/$/;/g' | sed 's/^;$/!/g' | tr -d '\n' | sed 's/!/\n/g' |
+#column -ts';' -R 2 | sed "s/ / /g" | grep -P $search | grep -vP "$exclude" 
+
+

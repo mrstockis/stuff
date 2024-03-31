@@ -1,0 +1,3 @@
+# useful for screen captured video
+
+ffmpeg -fflags +genpts -i vid.webm -r 24 vid-4.mp4
