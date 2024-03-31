@@ -1,8 +1,17 @@
 alias vim='vim -c "set ai | set tabstop=2 | set shiftwidth=2 | set expandtab"'
 alias WebSound='~/.webSound/./webSound.sh'
 alias www='w3m duckduckgo.org'
-alias Weatherin='curl wttr.in'
-alias l='ls -F'
-alias L='ls -FA'
-alias ll='ls -FSho'
-alias LL='ls -FASho'
+alias l='ls -F 2>/dev/null'
+alias L='ls -FA 2>/dev/null'
+alias ll='ls -FSho 2>/dev/null'
+alias LL='ls -FASho 2>/dev/null'
+alias ++=bash
+alias +p=python3
+alias bat="batcat"
+alias nano='nano -SixT4'
+alias pish='ssh pi@rasp.local'
+alias backup='rsync -azh --info=progress2'
+alias mirror='rsync -azh --info=progress2 --delete'
+alias DL="LL | grep -v total | rev | cut -d' ' -f1 | rev | du -ahd 1 | sort -h"
+alias dl="ll | grep -v total | rev | cut -d' ' -f1 | rev | du -hd 1 | sort -h"
+alias nvim="/home/thrum/.nvim/bin/nvim"
