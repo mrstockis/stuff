@@ -4,7 +4,6 @@
 #       crontab -e
 #       0 12 * * * bash ~/CronJobs/ObsidianPush.sh
 
-#push_date=`date +%y_%m_%d`
 push_date=`date +%d_%m_%y`
 
 # Log last run
